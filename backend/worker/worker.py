@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 
 from abc import abstractmethod
+from functools import wraps
 import json
 import os
 import pika
@@ -12,6 +13,7 @@ import threading
 import db_handle
 
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("Worker")
 ROOT = os.path.dirname(os.path.realpath(__file__))
 
 TrainModelDB = namedtuple('TrainModelDB', ['key', 'status', 'out_file'])
@@ -25,16 +27,38 @@ class RMQHandlerBase:
         self.host = hostname
         self.worker_port = worker_port
         self._thread = None
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=self.host, port=self.worker_port))
+        connection_params = pika.ConnectionParameters(host=self.host, port=self.worker_port)
+        pika.BlockingConnection = RMQHandlerBase.stable_connection(pika.BlockingConnection)
+        self.connection = pika.BlockingConnection(connection_params)
+        
         self.channel = self.connection.channel()
     
         self.channel.queue_declare(queue=queueName, durable=True)
         self.channel.basic_qos(prefetch_count=1)
         self.channel.basic_consume(queue=queueName, on_message_callback=self.callback, auto_ack=True)
+        # self.channel.start_consuming = RMQHandlerBase.stable_connection(self.channel.start_consuming)
     
     def start(self, threadName):
         self._thread = threading.Thread(target=self.channel.start_consuming, name=threadName)
         self._thread.start()
+    
+    @staticmethod
+    def stable_connection(func):
+        @wraps(func)
+        def wrapped(*args, **kwargs):
+            while True:
+                try:
+                    result = func(*args, **kwargs)
+                except (pika.exceptions.AMQPConnectionError) as e:
+                    RMQHandlerBase.logger.warning("Connection error occured, trying to reconnect...")
+                    time.sleep(0.5)
+                else:
+                    RMQHandlerBase.logger.info("Pika connection established")
+                    break
+            return result
+        return wrapped
+
+
 
     def callback(self, ch, method, properties, body):
         cmd = body.decode("utf-8")
@@ -43,19 +67,19 @@ class RMQHandlerBase:
             cmd_dict = json.loads(cmd)
             resp = self._parse_request(cmd_dict)
         except json.decoder.JSONDecodeError as e:
-            logging.error("Invalid JSON received from RMQ: %s" % cmd)
+            self.logger.warning("Invalid JSON received from RMQ: %s" % cmd)
             return
         except TypeError as e:
-            logging.error("Error occured while getting data from JSON, invalid type:\n", e)
+            self.logger.warning("Error occured while getting data from JSON, invalid type:\n", e)
             return
         except KeyError as e:
-            logging.error("Error occured while parsing data from JSON, missed key:\n", e)
+            logging.warning("Error occured while parsing data from JSON, missed key:\n", e)
             return
         else:
             self.logger.debug("Request parsed successfully for key: %s" % resp.key)
             result = self._process_request(resp.key, resp.data)
             self._save_result(resp.key, result)
-            logging.info(" [x] Done")
+            self.logger.info(" [x] Done for key: %s" % resp.key)
 
     @abstractmethod
     def _parse_request(self, request: json):
@@ -81,7 +105,7 @@ class RMQHandlerTrain(RMQHandlerBase):
         return super().start("RMQHandlerTrain")
 
     def _parse_request(self, request: json):
-        key = request['key']
+        key = str(request['key'])
         dataset_path = "/datasets/" + key
         return ResponseRMQ(key, dataset_path) 
 
@@ -106,7 +130,7 @@ class RMQHandlerPredict(RMQHandlerBase):
         return super().start("RMQHandlerPredict")
 
     def _parse_request(self, request: json):
-        key = request['key']    
+        key = str(request['key'])
         image_path = "/images/" + key
         return ResponseRMQ(key, image_path)
     
@@ -121,18 +145,28 @@ class RMQHandlerPredict(RMQHandlerBase):
     def _save_result(self, key, result):
         self._database.save(key, result)
 
-def network_mock(model, dataset):
-    return "mock result for model " + model + " and dataset " + dataset
+class NetworkMock:
+    @staticmethod
+    def train(dataset):
+        "mock result for training dataset " + dataset
+    
+    @staticmethod
+    def predict(model, image_path):
+        "mock result for model " + model + " and image " + image_path
 
 def main():
+    logging.getLogger("MQTTHandler").setLevel(logging.DEBUG)
+    logging.getLogger("ModelDBMock").setLevel(logging.DEBUG)
+    logging.getLogger("pika").setLevel(logging.FATAL)
     DBPort = os.environ.get("DB_PORT")
-    trainWorkerPort = os.environ.get("TRAIN_QUEUE_PORT")
-    predictorWorkerPort = os.environ.get("PREDICT_QUEUE_PORT")
-    rmq_train = RMQHandlerTrain("worker_train_queue", trainWorkerPort, "train", db_handle.TrainModelDBMock(DBPort), network_mock)
-    rmq_predict = RMQHandlerPredict("worker_predict_queue", predictorWorkerPort, "predict", db_handle.TrainModelDBMock(DBPort), network_mock)
+    rabbitmqPort = os.environ.get("RABBITMQ_PORT")
+    rmq_train = RMQHandlerTrain("rabbitmq", rabbitmqPort, "train", db_handle.TrainModelDBMock(DBPort), NetworkMock)
+    rmq_predict = RMQHandlerPredict("rabbitmq", rabbitmqPort, "predict", db_handle.PredictModelDBMock(DBPort), NetworkMock)
     rmq_train.start()
     rmq_predict.start()
-    logging.info(" [*] Waiting for messages. To exit press CTRL+C")
+    logger.info(" [*] Waiting for messages. To exit press CTRL+C")
     while True:
         time.sleep(1)
     
+if __name__ == "__main__":
+    main()
