@@ -1,7 +1,8 @@
 version: '3.9'
+
 services:
   rabbitmq:
-    image: rabbitmq:3-management-alpine
+    image: 'rabbitmq:3.6-management-alpine'
     restart: always
     ports:
       - '15672:15672'
@@ -13,8 +14,9 @@ services:
       - RABBITMQ_DEFAULT_PASS=
     networks:
         - avanpost
+
   postgres:
-    image: postgres:14.1-alpine
+    image: 'postgres:14.1-alpine'
     restart: always
     environment:
       - POSTGRES_DB=avanpost
@@ -22,9 +24,25 @@ services:
       - POSTGRES_PASSWORD=
     ports:
       - '5432:5432'
-        
+      
+  worker:
+    build: ../backend/worker
+    restart: always
+    depends_on:
+      - rabbitmq
+      - postgres
+    environment:
+      - DB_PORT=5432
+      - TRAIN_QUEUE_PORT=5672
+      - PREDICT_QUEUE_PORT=5673
+    networks:
+      - avanpost
+    volumes:
+      - ../backend/worker:/app
+      - ../databases/images:/images
+      - ../databases/datasets:/datasets
+      - ../databases/models:/models
 
 networks:
   avanpost:
     driver: bridge
-  

@@ -1,0 +1,1 @@
+This directory contains .env files and compose file.
