@@ -68,8 +68,6 @@ services:
       - POSTGRES_DB=avanpost
       - POSTGRES_USER=avanpostuser
       - POSTGRES_PASSWORD=avanpostpassword
-    ports:
-      - '5432:5432'
   worker_predictor:
     build: ../backend/worker
     restart: always
@@ -92,6 +90,16 @@ services:
       - ../ml:/ml
     entrypoint: 
       ./predict_worker.py
+      
+  parse:
+    image: ${DOCKER_REGISTRY-}parse
+    build:
+       context: ../
+       dockerfile: Parse/Dockerfile
+    volumes:
+       - ./databases/Images:/parseImages
+    ports:
+      - '8111:8000'
     
 networks:
   avanpost:

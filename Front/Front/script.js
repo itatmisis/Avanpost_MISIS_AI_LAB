@@ -27,7 +27,7 @@ $(function () {
         function uploadFile() {
 
             let xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://158.160.32.20:8000/Predict");
+            xhr.open("POST", "https://localhost:7002/UploadImages");
 
             let data = new FormData();
             console.log(form[0].files);
@@ -199,7 +199,7 @@ function changeProgressBarValue(percents) {
 
 function getClassesToTrain() {
     $.ajax({
-        url: 'http://213.178.155.140:8000/DataClasses/AllClasses',
+        url: 'http://213.178.155.140:8000/UploadImages/Upload',
         method: 'get',
         dataType: 'json',
         success: function (data) {
