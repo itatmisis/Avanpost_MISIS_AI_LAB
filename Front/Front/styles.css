@@ -101,7 +101,7 @@ body{
   box-shadow: 7px 7px 12px 15px  rgba(0,0,0,0.05);
 }
 .wrapper header{
-  color: #6990F2;
+  color: #969ba7;
   font-size: 27px;
   font-weight: 600;
   text-align: center;
@@ -115,13 +115,13 @@ body{
   justify-content: center;
   flex-direction: column;
   border-radius: 5px;
-  border: 2px dashed #6990F2;
+  border: 2px dashed #969ba7;
 }
 .wrapper form:hover{
-  border: 2px solid #6990F2;
+  border: 2px solid #969ba7;
 }
 form :where(i, p){
-  color: #6990F2;
+  color: #969ba7;
 }
 form i{
   font-size: 50px;

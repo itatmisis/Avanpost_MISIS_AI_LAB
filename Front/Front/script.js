@@ -29,7 +29,7 @@ $(function () {
         function uploadFile() {
 
             let xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://localhost:5002/UploadImages");
+            xhr.open("POST", "http://213.178.155.140:8000/UploadImages");
 
             let data = new FormData();
             console.log(form[0].files);

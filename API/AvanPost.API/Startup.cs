@@ -41,6 +41,18 @@ namespace AvanPost.API
                        .UseNpgsql("Host=213.178.155.140; port=5432; user id=avanpostuser; password=avanpostpassword; database=postgres")
                 .UseLowerCaseNamingConvention());
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder =>
+                    {
+                        builder
+                            .AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader();
+                    });
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,10 +65,7 @@ namespace AvanPost.API
                 app.UseSwaggerUI();
             }
 
-            app.UseCors(builder => builder
-                 .AllowAnyOrigin()
-                 .AllowAnyMethod()
-                 .AllowAnyHeader());
+            app.UseCors("CorsPolicy");
 
             app.UseHttpsRedirection();
 
