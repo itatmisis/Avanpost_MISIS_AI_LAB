@@ -242,3 +242,4 @@ PKG-INFO
 *.egg
 *.pth
 *.pt
+databases/images/   

@@ -34,7 +34,7 @@ def main():
         "login": rabbitmqLogin,
         "password": rabbitmqPassword,
         "queueName": "predict", 
-        "database": db_handle.TrainModelDBMock(DBPort), 
+        "database": db_handle.PredictModelDB(),
         "data_handler": predictor
     }
     rmq_predict = RMQHandlerPredict(**args)
