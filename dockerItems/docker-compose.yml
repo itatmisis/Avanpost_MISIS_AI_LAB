@@ -40,7 +40,7 @@ services:
       - '8001:80'
     restart: always
     volumes:
-      - /Images:/usr/share/nginx/html
+      - ../databases/images:/usr/share/nginx/html
       
   worker_trainer:
     build: ../backend/worker
@@ -91,15 +91,15 @@ services:
     entrypoint: 
       ./predict_worker.py
       
-  parse:
-    image: ${DOCKER_REGISTRY-}parse
-    build:
-       context: ../
-       dockerfile: Parse/Dockerfile
-    volumes:
-       - ./databases/Images:/parseImages
-    ports:
-      - '8111:8000'
+  # parse:
+  #   image: ${DOCKER_REGISTRY-}parse
+  #   build:
+  #      context: ../
+  #      dockerfile: Parse/Dockerfile
+  #   volumes:
+  #      - ./databases/Images:/parseImages
+  #   ports:
+  #     - '8111:8000'
     
 networks:
   avanpost:

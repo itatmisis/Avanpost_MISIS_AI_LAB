@@ -78,6 +78,9 @@ $(function () {
 
             xhr.send(data);
         }
+
+
+        
     });
 
     $(document).on('click',

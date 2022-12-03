@@ -17,7 +17,7 @@ namespace AvanPost.API.ParserApi
         {
             HttpRequestMessage message = new HttpRequestMessage()
             {
-
+                RequestUri = new System.Uri($"http://158.160.32.20:9000/getImages?object={request.ClassName}&folder_name={request.FolderName}&galery_name={request.ClassName}")
             };
 
             await _client.SendAsync(message);
