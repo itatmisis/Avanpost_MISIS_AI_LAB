@@ -39,8 +39,58 @@ services:
     restart: always
     volumes:
       - /Images:/usr/share/nginx/html
+      
+  worker_trainer:
+    build: ../backend/worker
+    restart: always
+    # depends_on:
+    #   # - rabbitmq
+    #   - postgres
+    env_file:
+      - mqtt.env
+      - postgres.env
+    environment:
+      - DB_PORT=5432
+      - TORCH_HOME=/ml/.cache/torch
+    networks:
+      - avanpost
+    volumes:
+      - ../backend/worker:/app
+      - ../databases/images:/images
+      - ../databases/datasets:/datasets
+      - ../databases/models:/models
+      - ../ml:/ml
+    entrypoint: 
+      ./train_worker.py
+
+      - POSTGRES_DB=avanpost
+      - POSTGRES_USER=avanpostuser
+      - POSTGRES_PASSWORD=avanpostpassword
+    ports:
+      - '5432:5432'
+   worker_predictor:
+    build: ../backend/worker
+    restart: always
+    # depends_on:
+    #   # - rabbitmq
+    #   - postgres
+    env_file:
+      - mqtt.env
+      - postgres.env
+    environment:
+      - DB_PORT=5432
+      - TORCH_HOME=/ml/.cache/torch
+    networks:
+      - avanpost
+    volumes:
+      - ../backend/worker:/app
+      - ../databases/images:/images
+      - ../databases/datasets:/datasets
+      - ../databases/models:/models
+      - ../ml:/ml
+    entrypoint: 
+      ./predict_worker.py
     
 networks:
   avanpost:
     driver: bridge
-  
