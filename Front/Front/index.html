@@ -5,9 +5,9 @@
     <link rel="stylesheet" type="text/css" href="styles.css" />
     <script type="text/javascript" src="jquery-3.6.1.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/nanogallery2/3.0.5/jquery.nanogallery2.js" integrity="sha512-1TWOUSOWl7UfSOV9xPDD67fNgLQqcUDYUfwY4scg2MVStOQ1GN09OKpWZA8B7TWSNJc2NueeiWoCK4eniENfKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nanogallery2/3.0.5/css/nanogallery2.woff.min.css" integrity="sha512-GT2/At8/05FZdOQR449M+921uWUmhYmqiAlX3tU+PSIlVO9XA7r2W46MwZEVkGofJO9iNtrVKVLDGE5/ZM6KDA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+  <link  href="https://cdn.jsdelivr.net/npm/nanogallery2@3/dist/css/nanogallery2.min.css" rel="stylesheet" type="text/css">
+            <script  type="text/javascript" src="https://cdn.jsdelivr.net/npm/nanogallery2@3/dist/jquery.nanogallery2.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
   <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
   <script src="script.js" type="text/javascript"></script>
   <script src="node.js" type="text/javascript"></script>
@@ -33,20 +33,6 @@
         </h1>
       </div>
     </header>
-    
-<!-- <div id="my_nanogallery2" 
-      data-nanogallery2='{ 
-         "itemsBaseURL":           "https://nanogallery2.nanostudio.org/samples/",
-         "thumbnailWidth":         "auto",
-         "thumbnailSelectable":    true,
-         "thumbnailHoverEffect2":  null
-         }'
-      > nanogallery2
-   <a href="berlin1.jpg" data-ngthumb="berlin1t.jpg" data-ngdesc="">Berlin 1 - image</a>
-   <a href="berlin2.jpg" data-ngthumb="berlin2t.jpg" data-ngdesc="">Berlin 2 - image</a>
-   <a href="berlin3.jpg" data-ngthumb="berlin3t.jpg" data-ngdesc="">Berlin 3 - image</a>
-   <a href="" data-ngkind="album" data-ngid="1000" data-ngthumb="berlin3t.jpg" data-ngdesc="">Berlin 3 - album</a>
- </div> -->
     <div class="body">
       <div class="form-group body-add-class">
        <div style="flex-direction: column">
@@ -57,15 +43,20 @@
               <input class="form-control" id="class-name" type="text"/>
             </div>
             <div class="wrapper">
-              <header>Загрузка изображений</header>
               <form  enctype="multipart/form-data" action="#">
                 <input class="file-input" type="file"  multiple="multiple" name="file" hidden>
-                <i class="fa-solid fa-upload"></i>
-                <p>Выберите изображения</p>
+                <div class="img-icon"><i class="far fa-image"></i></div>
+                <p>Выберите несколько изображений</p>
               </form>
-              <section class="progress-area"></section>
-              <section class="uploaded-area"></section>
             </div>
+            <div>
+              <input type="checkbox" id="parser" name="parser" >
+              <label for="parser">Подгрузить изображения из парсера</label>
+            </div>
+          <div class="image-number">
+            <p for="image-number">Введите количество картинок</p>
+            <input class="number-control" id="image-number" type="text"/>
+          </div>
             <div class="progress-bar-block" style="visibility: hidden">
               <div class="progress">
                 <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">25%</div>
@@ -82,6 +73,17 @@
         <button class="zero-models-button">Добавить</button>
       </div>
       <div class="choose-models">
+        <h3>
+          nanogallery2 - retrieve the selected images (Javascript)
+          <a href="https://nanogallery2.nanostudio.org/" target="_blank">[more...]</a>
+        </h3>
+        
+        <div id="my_nanogallery2"></div>
+        
+        Selected items:<br>
+        - counter: <span id="nb_selected">0</span><br>
+        - items: <span id="selection"></span><br>
+ </div>
       </div>
       </div>
       
@@ -94,6 +96,10 @@
 
       <div class="body-model-test">
         <span>Тест модели</span>
+          
+    </div>
+
+    
       </div>
     </div>
 </html>

@@ -97,7 +97,7 @@ body{
   width: 430px;
   background: #fff;
   border-radius: 5px;
-  padding: 30px;
+  /* padding: 30px; */
   box-shadow: 7px 7px 12px 15px  rgba(0,0,0,0.05);
 }
 .wrapper header{
@@ -107,10 +107,11 @@ body{
   text-align: center;
 }
 .wrapper form{
-  height: 150px;
+  /* height: 150px; */
   display: flex;
   cursor: pointer;
-  margin: 30px 0;
+  padding: 30px;
+  /* margin: 30px 0; */
   align-items: center;
   justify-content: center;
   flex-direction: column;
@@ -159,6 +160,15 @@ button:hover{
   background-color:#466dd0;
 }
 
+button:disabled{
+  /* box-shadow: 4px 4px 8px 9px  rgba(0,0,0,0.05); */
+  background-color: #969ba7;
+}
+
+#parser{
+  margin-top: 30px;
+}
+
 .zero-models{
   text-align: center;
   margin-top: 20%;
@@ -182,4 +192,8 @@ button:hover{
 .zero-models-button:hover{
   background-color:#ffffff00;
   color:#466dd0;
+}
+
+.image-number{
+  margin-top: 10px;
 }

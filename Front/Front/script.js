@@ -1,10 +1,6 @@
-
-
-
 $(function () {
     const form = document.querySelector("form"),
         fileInput = document.querySelector(".file-input")
-
     getClassesToTrain()
 
     $(document).ready(function () {
@@ -41,14 +37,19 @@ $(function () {
                 data.append('file', file);
                 totalSize += file.size;
             });
+            const className = document.querySelector(".form-control")
+            data.append("request", JSON.stringify({
+                ClassName: className.value
+            }))
 
-            data.append("request", JSON.stringify({ ClassName: "1111" }))
-
-            xhr.upload.onprogress = ({ loaded, total }) => {
+            xhr.upload.onprogress = ({
+                loaded,
+                total
+            }) => {
                 let fileLoaded = Math.floor((loaded / totalSize) * 100);
                 console.log(fileLoaded)
                 changeProgressBarValue(fileLoaded)
-                uploadedArea.classList.add("onprogress");
+                //uploadedArea.classList.add("onprogress");
                 if (loaded == total) {
 
                 }
@@ -63,6 +64,7 @@ $(function () {
         '.to-add-class',
         function () {
             ToAddClass();
+            // $('.add-class-btn').prop('disabled', true);
         })
 
     $(document).on('click',
@@ -89,25 +91,48 @@ $(function () {
             ToModelTestTable();
         })
 
+    $(document).on('change',
+        '.file-input',
+        function () {
+            if (document.querySelector(".form-control").value != '') {
+                $('.add-class-btn').prop('disabled', false);
+            }
+        });
 
-})
-
-function createGraph(startingIntent, story) {
-    if (!graph) {
-        addPan()
-        window.addEventListener('resize', () => {
-            updateLines()
+    $(document).on('click',
+        '.to-test-model',
+        function () {
+            ToModelTestTable();
         })
-    } else {
-        graph.remove()
-    }
 
-    graph = renderIntentAction(startingIntent, story)
-    document.getElementById('graph-root')?.appendChild(graph)
-    updateTippy()
-    addPan()
-    updateLines()
-}
+    $('#parser').click(function () {
+        if ($(this).is(':checked')) {
+            $('.image-number').show(100);
+        } else {
+            $('.image-number').hide(100);
+        }
+    });
+
+    $('.number-control').on('change', function () {
+        console.log(parseInt(document.querySelector(".number-control").value))
+        if (parseInt(document.querySelector(".number-control").value) > 0 ) {
+            $('.add-class-btn').prop('disabled', false);
+        }
+        else {
+            $('.add-class-btn').prop('disabled', true);
+        }
+    });
+
+    $(document).ready(function () {
+        $('.add-class-btn').prop('disabled', true);
+        $('.image-number').hide();
+        //document.querySelector(".form-control")
+        // console.log(document.querySelector(".form-control").value, form.value)
+        // if(document.querySelector(".form-control").value != '' && form.value) {
+        //     $('.add-class-btn').prop('disabled', false);
+        // }
+    });
+})
 
 
 function ToAddClass() {
@@ -174,10 +199,51 @@ function getClassesToTrain() {
         method: 'get',
         dataType: 'json',
         success: function (data) {
-            alert(data);
+            //alert(data);
             console.log(data)
+            // $(".choose-models").css("display", "inherit");
+            $(".zero-models").css("display", "none");
         }
     });
 }
 
-
+$(document).ready(function () {
+  
+    // build the gallery
+    $("#my_nanogallery2").nanogallery2({
+      thumbnailSelectable :   true,   // enables selection mode
+      items:[
+        {
+          src:   'berlin1.jpg',     // image url
+          srct:  'berlin1t.jpg',    // thumbnail url
+          title: 'Berlin 1'         // element title
+        },
+        { src: 'berlin2.jpg', srct: 'berlin2t.jpg', title: 'Berlin 2' },
+        { src: 'berlin3.jpg', srct: 'berlin3t.jpg', title: 'Berlin 3' }
+      ],
+      thumbnailWidth:         'auto',
+      thumbnailHeight:        150,
+      itemsBaseURL: 'https://nanogallery2.nanostudio.org/samples/',
+      thumbnailHoverEffect2: null,
+      locationHash: false
+    })
+    $(".nGY2GallerySub").css({"overflow": "visible", "touch-action": "pan-y", "user-select": "none", "-webkit-user-drag": "none", "-webkit-tap-highlight-color": "rgba(0, 0, 0, 0)", "transform": "none", "width": "700px", "height": "158px"})
+  
+  // retrieve selected items
+  $("#my_nanogallery2").on( 'itemSelected.nanogallery2 itemUnSelected.nanogallery2', function() {
+    var ngy2data = $("#my_nanogallery2").nanogallery2('data');
+    
+    // counter 
+    $('#nb_selected').text(ngy2data.gallery.nbSelected);
+    
+    // selected items
+    var sel = '';
+    ngy2data.items.forEach( function(item) {
+      if( item.selected ) {
+        sel += item.GetID() + '[' + item.title + '] ';
+      }
+    });
+    $('#selection').text(sel);
+  });
+  
+  });
