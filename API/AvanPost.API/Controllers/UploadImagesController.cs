@@ -91,9 +91,10 @@ namespace AvanPost.API.Controllers
 
                 await _context.SaveChangesAsync();
 
-                ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = @"python C:\Хакатоны\2022\Avanpost_Repo\API\AvanPost.API\main.py", Arguments = $"{request.ClassName} {request.ClassName} ./", };
-                Process proc = new Process() { StartInfo = startInfo, };
-                proc.Start();
+                Console.WriteLine(Directory.GetCurrentDirectory());
+                //ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = @"python main.py", Arguments = $"{request.ClassName} {request.ClassName} ./", };
+               // Process proc = new Process() { StartInfo = startInfo, };
+               // proc.Start();
 
 
                 return Ok();
