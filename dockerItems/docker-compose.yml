@@ -28,7 +28,7 @@ services:
       context: ../
       dockerfile: API/AvanPost.API/Dockerfile
    volumes:
-      - ./Images:/Images
+      - /Images:/Images
    ports:
      - '8000:80'
         
