@@ -21,6 +21,7 @@ logger = logging.getLogger("Worker.predict")
 def main():
     logging.getLogger("MQTTHandler").setLevel(logging.DEBUG)
     logging.getLogger("ModelDBMock").setLevel(logging.DEBUG)
+    logging.getLogger("PostgresDB.Predict").setLevel(logging.DEBUG)
     logging.getLogger("pika").setLevel(logging.FATAL)
     DBPort = os.environ.get("DB_PORT")
     rabbitmqHost = os.environ.get("RMQ_HOST")

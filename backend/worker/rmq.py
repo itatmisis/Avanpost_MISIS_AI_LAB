@@ -93,22 +93,29 @@ class RMQHandlerBase:
         connection.add_callback_threadsafe(cb)
                 
     def callback(self, channel, method_frame, header_frame, body, args):
+        def ack_message():
+            cb = functools.partial(self._ack_message, channel, delivery_tag)
+            connection.add_callback_threadsafe(cb)
+
         delivery_tag = method_frame.delivery_tag
         connection = args[0]
-        cmd = body.decode("utf-8")
         try:
+            cmd = body.decode("utf-8")
             self.logger.debug("[x] Received %r" % cmd)
             cmd_dict = json.loads(cmd)
             resp = self._parse_request(cmd_dict)
         except json.decoder.JSONDecodeError as e:
             self.logger.warning("Invalid JSON received from RMQ: %s" % cmd)
-            return
+            ack_message()
         except TypeError as e:
-            self.logger.warning("Error occured while getting data from JSON, invalid type:\n", e)
-            return
+            self.logger.warning("Error occured while getting data from JSON, invalid type.")
+            ack_message()
         except KeyError as e:
-            logging.warning("Error occured while parsing data from JSON, missed key:\n", e)
-            return
+            logging.warning("Error occured while parsing data from JSON, missed key.")
+            ack_message()
+        except Exception as e:
+            self.logger.error("Error occured while parsing request.")
+            ack_message()
         else:
             self.logger.debug("Request parsed successfully for key: %s" % resp.key)
             thread = threading.Thread(target=self.run_predictor_thread, args=(connection, channel, delivery_tag, resp), name=str(resp.key), daemon=True)
@@ -137,7 +144,7 @@ class RMQHandlerTrain(RMQHandlerBase):
 
     def _parse_request(self, request: json):
         key = str(request['key'])
-        dataset_path = "datasets/default"
+        dataset_path = "/datasets/default"
         # dataset_path = "/datasets/" + str(request['dataset_path'])
         return ResponseRMQ(key, dataset_path) 
 

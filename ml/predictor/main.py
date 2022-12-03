@@ -1,3 +1,4 @@
+import os
 import warnings
 import torchvision
 import zipfile
@@ -98,13 +99,15 @@ def train(model, epoches, train_data, device, val_data = None):
     # torch.save(model, 'new_model.pt')
 
 def train_model(model_path:str, dataset_path:str):
+    num_classes = len(os.listdir(dataset_path))
+    print(f"Number of classes: {num_classes}")
     train_set = torchvision.datasets.ImageFolder(dataset_path, transform=preprocess)
     train_dataset = DataLoader(train_set, batch_size=16, num_workers=1, shuffle=True)
     # подгружаем нашу предобученную модель
     model_backbone = pretrained_model
     # создаем новую модель с нашим количеством классов
-    model = ResNet(model_backbone, 10) 
-    train(model=model, epoches=5, train_data=train_dataset, device=device)
+    model = ResNet(model_backbone, num_classes) 
+    train(model=model, epoches=2, train_data=train_dataset, device=device)
     model_path += ".pth"
     torch.save(model, model_path)
 
