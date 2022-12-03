@@ -149,11 +149,20 @@ class RMQHandlerTrain(RMQHandlerBase):
         return ResponseRMQ(key, dataset_path) 
 
     def _process_request(self, key, dataset_path: str):
+        def notyfier(progress):
+            logging.getLogger("MQTTHandler.Train.Notyfier").info("Progress: %s" % progress)
+            self._database.update_progress(key, progress)
         # model_path = "/models/" + str(key)
         model_path = "/models/model"
         self.logger.debug('Training model "%s" with dataset "%s"' % (model_path, dataset_path))
-        notyfier = logging.getLogger("MQTTHandler.Train.Notyfier").info
-        self._data_handler.train(model_path, dataset_path, notyfier=notyfier)
+        self._database.update_dataset_name(key, dataset_path)
+        self._database.in_progress(key)
+        try:
+            self._data_handler.train(model_path, dataset_path, notyfier=notyfier)
+        except Exception as e:
+            self.logger.error("Error occured while training model: %s" % e)
+            self._database.error(key)
+        self._database.done(key)
         self.logger.debug('Model "%s" trained successfully' % model_path)
         result = "Done"
         # TODO: save update progress bar in db for key
