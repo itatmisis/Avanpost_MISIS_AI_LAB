@@ -45,10 +45,12 @@ namespace AvanPost.API.Controllers
             {
                 return BadRequest("Ќазвание класса не может быть пустым");
             }
+            var files = Request.Form.Files;
 
             var dataClass = new DataClass()
             {
-                Name = request.ClassName
+                Name = request.ClassName,
+                SamplesNumber = files.Count
             };
 
             var imagesFolder = Path.Combine(_settings.ImagesFolder, dataClass.Name);
@@ -63,13 +65,15 @@ namespace AvanPost.API.Controllers
                 await _context.DataClasses.AddAsync(dataClass);
                 await _context.SaveChangesAsync();
 
-                var files = Request.Form.Files;
+             
 
                 foreach (var file in files)
                 {
                     if (file.Length > 0)
                     {
                         var filePath = Path.Combine(imagesFolder, file.FileName);
+
+                        Console.WriteLine(filePath);
 
                         using (var stream = System.IO.File.Create(filePath))
                         {
