@@ -1,7 +1,8 @@
 version: '3.9'
+
 services:
   rabbitmq:
-    image: rabbitmq:3-management-alpine
+    image: 'rabbitmq:3.6-management-alpine'
     restart: always
     ports:
       - '15672:15672'
@@ -13,18 +14,36 @@ services:
       - RABBITMQ_DEFAULT_PASS=
     networks:
         - avanpost
+
   postgres:
-    image: postgres:14.1-alpine
+    image: 'postgres:14.1-alpine'
     restart: always
-    environment:
-      - POSTGRES_DB=avanpost
-      - POSTGRES_USER=
-      - POSTGRES_PASSWORD=
+    env_file:
+      - postgres.env
     ports:
       - '5432:5432'
-        
+      
+  worker:
+    build: ../backend/worker
+    restart: always
+    depends_on:
+      - rabbitmq
+      - postgres
+    environment:
+      - DB_PORT=5432
+      - RABBITMQ_PORT=5672
+      - TORCH_HOME=/ml/.cache/torch
+    networks:
+      - avanpost
+    volumes:
+      - ../backend/worker:/app
+      - ../databases/images:/images
+      - ../databases/datasets:/datasets
+      - ../databases/models:/models
+      - ../ml:/ml
+    entrypoint: 
+      ./worker.py
 
 networks:
   avanpost:
     driver: bridge
-  
