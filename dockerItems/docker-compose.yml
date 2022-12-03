@@ -15,22 +15,23 @@ services:
   #   networks:
   #       - avanpost
 
-  postgres:
-    image: 'postgres:14.1-alpine'
-    restart: always
-    env_file:
-      - postgres.env
-    ports:
-      - '5432:5432'
+  # postgres:
+  #   image: 'postgres:14.1-alpine'
+  #   restart: always
+  #   env_file:
+  #     - postgres.env
+  #   ports:
+  #     - '5432:5432'
       
   worker_predictor:
     build: ../backend/worker
     restart: always
-    depends_on:
-      # - rabbitmq
-      - postgres
+    # depends_on:
+    #   # - rabbitmq
+    #   - postgres
     env_file:
       - mqtt.env
+      - postgres.env
     environment:
       - DB_PORT=5432
       - TORCH_HOME=/ml/.cache/torch
@@ -48,11 +49,12 @@ services:
   worker_trainer:
     build: ../backend/worker
     restart: always
-    depends_on:
-      # - rabbitmq
-      - postgres
+    # depends_on:
+    #   # - rabbitmq
+    #   - postgres
     env_file:
       - mqtt.env
+      - postgres.env
     environment:
       - DB_PORT=5432
       - TORCH_HOME=/ml/.cache/torch
