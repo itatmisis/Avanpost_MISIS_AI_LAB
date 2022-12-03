@@ -99,7 +99,9 @@ def train(model, epoches, train_data, device, val_data = None):
     # torch.save(model, 'new_model.pt')
 
 def train_model(model_path:str, dataset_path:str):
-    num_classes = len(os.listdir(dataset_path))
+    dirs = os.listdir(dataset_path)
+    dirs = list(filter(lambda x: x[0] != '.', dirs))
+    num_classes = len(dirs)
     print(f"Number of classes: {num_classes}")
     train_set = torchvision.datasets.ImageFolder(dataset_path, transform=preprocess)
     train_dataset = DataLoader(train_set, batch_size=16, num_workers=1, shuffle=True)
