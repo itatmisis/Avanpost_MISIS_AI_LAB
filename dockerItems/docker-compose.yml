@@ -1,96 +1,109 @@
 version: '3.9'
 services:
-  # rabbitmq:
-  #   image: rabbitmq:3-management-alpine
-  #   restart: always
-  #   ports:
-  #     - '15672:15672'
-  #     - '5672:5672'
-  #   environment:
-  #     - RABBITMQ_NODE_TYPE=stats
-  #     - RABBITMQ_NODE_NAME=rabbit@stats
-  #     - RABBITMQ_DEFAULT_USER=avanpostuser
-  #     - RABBITMQ_DEFAULT_PASS=avanpostpassword
-  #   networks:
-  #       - avanpost
-  # postgres:
-  #   image: postgres:14.1-alpine
-  #   restart: always
-  #   environment:
-  #     - POSTGRES_DB=avanpost
-  #     - POSTGRES_USER=avanpostuser
-  #     - POSTGRES_PASSWORD=avanpostpassword
-  #   ports:
-  #     - '5432:5432'
-  # api:
-  #  image: ${DOCKER_REGISTRY-}avanpost-api
-  #  build:
-  #      context: ../
-  #      dockerfile: API/AvanPost.API/Dockerfile
-  #  volumes:
-  #      - /Images:/Images
-  #      - ./databases/Images:/parseImages
-  #      - ./Parser:/parser
-  #  ports:
-  #     - '8000:80'
-     
-  # nginx-static:
-  #   image: nginx:latest
-  #   ports:
-  #     - '8001:80'
-  #   restart: always
-  #   volumes:
-  #     - /Images:/usr/share/nginx/html
-      
-  worker_trainer:
-    build: ../backend/worker
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
     restart: always
-    # depends_on:
-    #   # - rabbitmq
-    #   - postgres
-    env_file:
-      - mqtt.env
-      - postgres.env
+    ports:
+      - '15672:15672'
+      - '5672:5672'
     environment:
-      - DB_PORT=5432
-      - TORCH_HOME=/ml/.cache/torch
+      - RABBITMQ_NODE_TYPE=stats
+      - RABBITMQ_NODE_NAME=rabbit@stats
+      - RABBITMQ_DEFAULT_USER=avanpostuser
+      - RABBITMQ_DEFAULT_PASS=avanpostpassword
     networks:
-      - avanpost
-    volumes:
-      - ../backend/worker:/app
-      - ../databases/images:/images
-      - ../databases/datasets:/datasets
-      - ../databases/models:/models
-      - ../ml:/ml
-    entrypoint: 
-      ./train_worker.py
-
+        - avanpost
+  postgres:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
       - POSTGRES_DB=avanpost
       - POSTGRES_USER=avanpostuser
       - POSTGRES_PASSWORD=avanpostpassword
-
-  worker_predictor:
-    build: ../backend/worker
+    ports:
+      - '5432:5432'
+  api:
+   image: ${DOCKER_REGISTRY-}avanpost-api
+   build:
+       context: ../
+       dockerfile: API/AvanPost.API/Dockerfile
+   volumes:
+       - /Images:/Images
+       - ./databases/Images:/parseImages
+       - ./Parser:/parser
+   ports:
+      - '8000:80'
+     
+  nginx-static:
+    image: nginx:latest
+    ports:
+      - '8001:80'
     restart: always
-    # depends_on:
-    #   # - rabbitmq
-    #   - postgres
-    env_file:
-      - mqtt.env
-      - postgres.env
-    environment:
-      - DB_PORT=5432
-      - TORCH_HOME=/ml/.cache/torch
+    volumes:
+      - /Images:/usr/share/nginx/html
+      
+  # worker_trainer:
+  #   build: ../backend/worker
+  #   restart: always
+  #   # depends_on:
+  #   #   # - rabbitmq
+  #   #   - postgres
+  #   env_file:
+  #     - mqtt.env
+  #     - postgres.env
+  #   environment:
+  #     - DB_PORT=5432
+  #     - TORCH_HOME=/ml/.cache/torch
+  #   networks:
+  #     - avanpost
+  #   volumes:
+  #     - ../backend/worker:/app
+  #     - ../databases/images:/images
+  #     - ../databases/datasets:/datasets
+  #     - ../databases/models:/models
+  #     - ../ml:/ml
+  #   entrypoint: 
+  #     ./train_worker.py
+
+  #     - POSTGRES_DB=avanpost
+  #     - POSTGRES_USER=avanpostuser
+  #     - POSTGRES_PASSWORD=avanpostpassword
+
+  # worker_predictor:
+  #   build: ../backend/worker
+  #   restart: always
+  #   # depends_on:
+  #   #   # - rabbitmq
+  #   #   - postgres
+  #   env_file:
+  #     - mqtt.env
+  #     - postgres.env
+  #   environment:
+  #     - DB_PORT=5432
+  #     - TORCH_HOME=/ml/.cache/torch
+  #   networks:
+  #     - avanpost
+  #   volumes:
+  #     - ../backend/worker:/app
+  #     - ../databases/images:/images
+  #     - ../databases/datasets:/datasets
+  #     - ../databases/models:/models
+  #     - ../ml:/ml
+  #   entrypoint: 
+  #     ./predict_worker.py
+
+  parser:
+    build: ../Parser
+    restart: always
     networks:
       - avanpost
+    ports:
+      - 8005:8005
     volumes:
-      - ../backend/worker:/app
-      - ../databases/images:/images
       - ../databases/datasets:/datasets
-      - ../databases/models:/models
-      - ../ml:/ml
-    entrypoint: 
-      ./predict_worker.py
+      - ../Parser:/app
+    entrypoint:
+      ./server.py
     
 networks:
   avanpost:
