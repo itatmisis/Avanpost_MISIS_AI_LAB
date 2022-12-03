@@ -23,7 +23,7 @@ def main():
     logging.getLogger("ModelDBMock").setLevel(logging.DEBUG)
     logging.getLogger("PostgresDB.Predict").setLevel(logging.DEBUG)
     logging.getLogger("pika").setLevel(logging.FATAL)
-    DBPort = os.environ.get("DB_PORT")
+    # DBPort = os.environ.get("DB_PORT")
     rabbitmqHost = os.environ.get("RMQ_HOST")
     rabbitmqPort = os.environ.get("RMQ_PORT")
     rabbitmqLogin = os.environ.get("RMQ_LOGIN")

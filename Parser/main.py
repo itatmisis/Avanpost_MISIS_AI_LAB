@@ -40,10 +40,6 @@ def get_links(page):
     return links
 
 
-def save_images(links, folder_name, galery_name):
-    if str(galery_name) not in os.listdir():
-        os.makedirs(os.path.join(os.getcwd(), galery_name))
-
 def save_images(links, folder_name):
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)

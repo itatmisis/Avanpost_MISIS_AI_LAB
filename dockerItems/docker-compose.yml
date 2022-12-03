@@ -16,10 +16,8 @@ services:
   postgres:
     image: postgres:14.1-alpine
     restart: always
-    environment:
-      - POSTGRES_DB=avanpost
-      - POSTGRES_USER=avanpostuser
-      - POSTGRES_PASSWORD=avanpostpassword
+    env_file:
+      - postgres.env
     ports:
       - '5432:5432'
   api:
@@ -28,9 +26,7 @@ services:
        context: ../
        dockerfile: API/AvanPost.API/Dockerfile
    volumes:
-       - /Images:/Images
-       - ./databases/Images:/parseImages
-       - ./Parser:/parser
+       - ../databases/datasets/default:/parseImages
    ports:
       - '8000:80'
      
@@ -40,14 +36,14 @@ services:
       - '8001:80'
     restart: always
     volumes:
-      - ../databases/images:/usr/share/nginx/html
+      - ../databases:/usr/share/nginx/html
       
   worker_trainer:
     build: ../backend/worker
     restart: always
-    # depends_on:
-    #   # - rabbitmq
-    #   - postgres
+    depends_on:
+      - rabbitmq
+      - postgres
     env_file:
       - mqtt.env
       - postgres.env
@@ -71,9 +67,9 @@ services:
   worker_predictor:
     build: ../backend/worker
     restart: always
-    # depends_on:
-    #   # - rabbitmq
-    #   - postgres
+    depends_on:
+      - rabbitmq
+      - postgres
     env_file:
       - mqtt.env
       - postgres.env
@@ -103,6 +99,16 @@ services:
       - ../Parser:/app
     entrypoint:
       ./server.py
+
+  frontend:
+    build: ../Front
+    volumes:
+      - ../Front/Front:/web
+    ports:
+      - 80:8080
+    networks:
+      - avanpost
+    restart: always
     
 networks:
   avanpost:

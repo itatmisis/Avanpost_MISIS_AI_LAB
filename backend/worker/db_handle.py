@@ -27,6 +27,16 @@ class predict(Model):
         database = db
         database_table = 'predict'
 
+class train(Model):
+    id = IntegerField(primary_key=True)
+    key = TextField()
+    status = IntegerField()
+    percent = DoubleField()
+    dataset = TextField()
+    class Meta:
+        database = db
+        database_table = 'train'
+
 class PredictModelDB:
     DONE = 2
     PENDING = 0
@@ -74,7 +84,52 @@ class PredictModelDB:
         except Exception as e:
             self._logger.error("Error while updating progress in DB: {}".format(e))
     
+class TrainModeDB:
+    DONE = 2
+    PENDING = 0
+    IN_PROGRESS = 1
+    ERROR = 3
+    _logger = logging.getLogger("PostgresDB.Train")
 
+    def pending(self, key):
+        self.update_status(key, self.PENDING)
+    
+    def in_progress(self, key):
+        self.update_status(key, self.IN_PROGRESS)
+
+    def done(self, key):
+        self.update_status(key, self.DONE)
+
+    def error(self, key):
+        self.update_status(key, self.ERROR)
+    
+    def validate_key(self, key):
+        try:
+            return train.get(predict.key == key)
+        except Exception:
+            self._logger.error("Error while validating key in DB: {}".format(key))
+            return False
+
+    def update_status(self, key, status):
+        self.validate_key(key)
+        try:
+            train.update(status=status).where(train.key == key).execute()
+        except Exception as e:
+            self._logger.error("Error while updating status in DB: {}".format(e))
+
+    def update_progress(self, key, percent):
+        self.validate_key(key)
+        try:
+            train.update(percent=percent).where(train.key == key).execute()
+        except Exception as e:
+            self._logger.error("Error while updating progress in DB: {}".format(e))
+    
+    def update_dataset_name(self, key, dataset):
+        self.validate_key(key)
+        try:
+            train.update(dataset=dataset).where(train.key == key).execute()
+        except Exception as e:
+            self._logger.error("Error while updating dataset name in DB: {}".format(e))
 
 class TrainModelDBMock:
     logger = logging.getLogger("ModelDBMock.Train")

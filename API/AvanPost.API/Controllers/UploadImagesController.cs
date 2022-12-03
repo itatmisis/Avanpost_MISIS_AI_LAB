@@ -41,13 +41,13 @@ namespace AvanPost.API.Controllers
 
             if(request == null)
             {
-                return BadRequest("Отсутствует request в FormData");
+                return BadRequest("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ request пїЅ FormData");
             }
 
 
             if (string.IsNullOrEmpty(request.ClassName))
             {
-                return BadRequest("Название класса не может быть пустым");
+                return BadRequest("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ");
             }
             var files = Request.Form.Files;
 
@@ -99,7 +99,7 @@ namespace AvanPost.API.Controllers
                     await _parserApi.Send(new ParserApi.Models.ParserRequest()
                     {
                         ClassName = request.ClassName,
-                        FolderName = "/ParserImagess"
+                        FolderName = "/ParserImages"
                     });
                 }
                 catch(Exception ex)
@@ -112,7 +112,7 @@ namespace AvanPost.API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Ошибка во время создания класса");
+                return BadRequest("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ");
             }
         }
     }
