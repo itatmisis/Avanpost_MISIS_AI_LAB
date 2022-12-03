@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -89,6 +90,12 @@ namespace AvanPost.API.Controllers
                 }
 
                 await _context.SaveChangesAsync();
+
+                ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = @"python C:\Хакатоны\2022\Avanpost_Repo\API\AvanPost.API\main.py", Arguments = $"{request.ClassName} {request.ClassName} ./", };
+                Process proc = new Process() { StartInfo = startInfo, };
+                proc.Start();
+
+
                 return Ok();
             }
             catch (Exception ex)

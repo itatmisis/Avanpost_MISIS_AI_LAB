@@ -102,9 +102,6 @@ namespace AvanPost.API.Controllers
                     keys = keys.Where(x => result.Select(y => y.Key).Contains(x.Item1)).ToList();
                 }
 
-
-
-
                 return Ok();
             }
             catch (Exception ex)
