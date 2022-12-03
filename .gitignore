@@ -235,3 +235,8 @@ AppPackages/
 .vscode/
 .history/
 docker/mongo-volume/
+*.jpg
+*.txt
+PKG-INFO
+*.egg-info
+*.egg
