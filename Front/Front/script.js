@@ -5,8 +5,6 @@ $(function () {
     const form = document.querySelector("form"),
         fileInput = document.querySelector(".file-input")
 
-    getClassesToTrain()
-
     $(document).ready(function () {
         ToAddClass();
         // const startingIntent = 'Модель';
@@ -31,7 +29,7 @@ $(function () {
         function uploadFile() {
 
             let xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://213.178.155.140:8000/UploadImages");
+            xhr.open("POST", "http://localhost:5002/Predict");
 
             let data = new FormData();
             console.log(form[0].files);
@@ -119,6 +117,8 @@ function ToAddClass() {
     $(".to-train").css("color", "black");
     $(".to-model-version").css("color", "black");
     $(".to-test-model").css("color", "black");
+
+
 }
 
 function ToTrainTable() {
@@ -130,6 +130,8 @@ function ToTrainTable() {
     $(".to-train").css("color", "#6990F2");
     $(".to-model-version").css("color", "black");
     $(".to-test-model").css("color", "black");
+
+    getClassesToTrain();
 }
 
 function ToVersionHistoryTable() {
@@ -160,7 +162,7 @@ function showProgressBar() {
 }
 
 function hideProgressBar() {
-    $(".progress-bar").css("visibility", "hidder");
+    $(".progress-bar").css("visibility", "hidden");
 }
 
 function changeProgressBarValue(percents) {
@@ -174,10 +176,32 @@ function getClassesToTrain() {
         method: 'get',
         dataType: 'json',
         success: function (data) {
-            alert(data);
-            console.log(data)
+            showClassesData(data)
+        },
+        error: function (error) {
+            console.log(error)
         }
     });
+}
+
+function showClassesData(data) {
+    if (data.length > 0) {
+        showClasses();
+
+    }
+    else {
+        showNoClasses();
+    }
+}
+
+function showNoClasses() {
+    $(".zero-models").css("display", "inherit")
+    $(".data-classes").css("display", "none")
+}
+
+function showClasses() {
+    $(".zero-models").css("display", "none")
+    $(".data-classes").css("display", "inherit")
 }
 
 

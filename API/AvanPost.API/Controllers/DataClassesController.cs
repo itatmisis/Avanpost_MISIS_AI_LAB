@@ -14,13 +14,11 @@ namespace AvanPost.API.Controllers
     [Route("[controller]")]
     public class DataClassesController: ControllerBase
     {
-        private readonly ILogger<DataClassesController> _logger;
         private readonly AvanpostContext _context;
         private readonly AppSettings _settings;
 
         public DataClassesController(ILogger<DataClassesController> logger, AvanpostContext context, IOptions<AppSettings> options)
         {
-            _logger = logger;
             _context = context;
             _settings = options.Value;
         }
@@ -38,7 +36,8 @@ namespace AvanPost.API.Controllers
                 {
                     x.Id,
                     x.Name,
-                    Images = x.Images.Select(x => x.Path)
+                    Images = x.Images.Select(x => x.Path),
+                    x.SamplesNumber
                 }));
             }
             catch(Exception ex)
@@ -60,7 +59,8 @@ namespace AvanPost.API.Controllers
                 {
                     x.Id,
                     x.Name,
-                    Images = x.Images.Select(x => x.Path)
+                    Images = x.Images.Select(x => x.Path),
+                    x.SamplesNumber
                 }));
             }
             catch(Exception ex)
