@@ -95,7 +95,7 @@ def train(model, epoches, train_data, device, val_data = None):
         if val_data is not None:
             test_loss, test_accuracy = evaluation_epoch(model, val_data, device)
             print(f'Test loss = {test_loss}, Test accuracy = {test_accuracy}')
-    torch.save(model, 'new_model.pt')
+    # torch.save(model, 'new_model.pt')
 
 def train_model(model_path:str, dataset_path:str):
     train_set = torchvision.datasets.ImageFolder(dataset_path, transform=preprocess)
