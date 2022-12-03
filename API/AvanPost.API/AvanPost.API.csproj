@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <UserSecretsId>0fcff4fc-60ea-41b8-ba3d-985349972fec</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
 	<GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
   </PropertyGroup>
 
