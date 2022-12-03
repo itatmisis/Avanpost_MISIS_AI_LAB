@@ -25,24 +25,82 @@ services:
   api:
    image: ${DOCKER_REGISTRY-}avanpost-api
    build:
-      context: ../
-      dockerfile: API/AvanPost.API/Dockerfile
+       context: ../
+       dockerfile: API/AvanPost.API/Dockerfile
    volumes:
-      - /Images:/Images
+       - /Images:/Images
+       - ./databases/Images:/parseImages
+       - ./Parser:/parser
    ports:
-     - '8000:80'
+      - '8000:80'
      
-  nginx:
+  nginx-static:
     image: nginx:latest
     ports:
-      - '80:80'
+      - '8001:80'
     restart: always
     volumes:
-      - ./nginx/default.conf:/etc/nginx/default.conf
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-        
+      - /Images:/usr/share/nginx/html
+      
+  worker_trainer:
+    build: ../backend/worker
+    restart: always
+    # depends_on:
+    #   # - rabbitmq
+    #   - postgres
+    env_file:
+      - mqtt.env
+      - postgres.env
+    environment:
+      - DB_PORT=5432
+      - TORCH_HOME=/ml/.cache/torch
+    networks:
+      - avanpost
+    volumes:
+      - ../backend/worker:/app
+      - ../databases/images:/images
+      - ../databases/datasets:/datasets
+      - ../databases/models:/models
+      - ../ml:/ml
+    entrypoint: 
+      ./train_worker.py
 
+      - POSTGRES_DB=avanpost
+      - POSTGRES_USER=avanpostuser
+      - POSTGRES_PASSWORD=avanpostpassword
+  worker_predictor:
+    build: ../backend/worker
+    restart: always
+    # depends_on:
+    #   # - rabbitmq
+    #   - postgres
+    env_file:
+      - mqtt.env
+      - postgres.env
+    environment:
+      - DB_PORT=5432
+      - TORCH_HOME=/ml/.cache/torch
+    networks:
+      - avanpost
+    volumes:
+      - ../backend/worker:/app
+      - ../databases/images:/images
+      - ../databases/datasets:/datasets
+      - ../databases/models:/models
+      - ../ml:/ml
+    entrypoint: 
+      ./predict_worker.py
+      
+  parse:
+    image: ${DOCKER_REGISTRY-}parse
+    build:
+       context: ../
+       dockerfile: Parse/Dockerfile
+    volumes:
+       - ./databases/Images:/parseImages
+    ports:
+      - '8111:8000'
+    
 networks:
   avanpost:
     driver: bridge
-  

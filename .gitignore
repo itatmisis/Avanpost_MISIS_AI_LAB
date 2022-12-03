@@ -224,3 +224,19 @@ AppPackages/
 #####
 # End of core ignore list, below put you custom 'per project' settings (patterns or path)
 #####
+
+~*
+*~
+*.pyc
+*.pth
+*.dat
+*.zip
+.DS_Store
+.vscode/
+.history/
+docker/mongo-volume/
+*.jpg
+*.txt
+PKG-INFO
+*.egg-info
+*.egg

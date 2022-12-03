@@ -7,8 +7,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using AvanPost.API.ParserApi;
 
 namespace AvanPost.API.Controllers
 {
@@ -21,12 +23,14 @@ namespace AvanPost.API.Controllers
         private readonly ILogger<UploadImagesController> _logger;
         private readonly AvanpostContext _context;
         private readonly AppSettings _settings;
+        private readonly ParserApiCaller _parserApi;
 
         public UploadImagesController(ILogger<UploadImagesController> logger, AvanpostContext context, IOptions<AppSettings> options)
         {
             _logger = logger;
             _context = context;
             _settings = options.Value;
+            _parserApi = new ParserApiCaller();
         }
 
         [HttpPost(Name = "Upload")]
@@ -73,8 +77,6 @@ namespace AvanPost.API.Controllers
                     {
                         var filePath = Path.Combine(imagesFolder, file.FileName);
 
-                        Console.WriteLine(filePath);
-
                         using (var stream = System.IO.File.Create(filePath))
                         {
                             await file.CopyToAsync(stream);
@@ -89,6 +91,21 @@ namespace AvanPost.API.Controllers
                 }
 
                 await _context.SaveChangesAsync();
+
+                try
+                {
+                    await _parserApi.Send(new ParserApi.Models.ParserRequest()
+                    {
+                        ClassName = request.ClassName,
+                        FolderName = "/ParserImagess"
+                    });
+                }
+                catch(Exception ex)
+                {
+
+                }
+
+
                 return Ok();
             }
             catch (Exception ex)

@@ -25,7 +25,7 @@ $(function () {
         function uploadFile() {
 
             let xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://213.178.155.140:8000/UploadImages");
+            xhr.open("POST", "https://localhost:7002/UploadImages");
 
             let data = new FormData();
             console.log(form[0].files);
@@ -107,7 +107,7 @@ $(function () {
 
     $('.number-control').on('change', function () {
         console.log(parseInt(document.querySelector(".number-control").value))
-        if (parseInt(document.querySelector(".number-control").value) > 0 ) {
+        if (parseInt(document.querySelector(".number-control").value) > 0) {
             $('.add-class-btn').prop('disabled', false);
         }
         else {
@@ -316,7 +316,7 @@ function showProgressBar() {
 }
 
 function hideProgressBar() {
-    $(".progress-bar").css("visibility", "hidder");
+    $(".progress-bar").css("visibility", "hidden");
 }
 
 function changeProgressBarValue(percents) {
@@ -326,14 +326,14 @@ function changeProgressBarValue(percents) {
 
 function getClassesToTrain() {
     $.ajax({
-        url: 'http://213.178.155.140:8000/DataClasses/AllClasses',
+        url: 'http://213.178.155.140:8000/UploadImages/Upload',
         method: 'get',
         dataType: 'json',
         success: function (data) {
-            //alert(data);
-            console.log(data)
-            // $(".choose-models").css("display", "inherit");
-            $(".zero-models").css("display", "none");
+            showClassesData(data)
+        },
+        error: function (error) {
+            console.log(error)
         }
     });
 }
