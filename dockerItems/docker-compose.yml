@@ -1,27 +1,15 @@
 version: '3.9'
 services:
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-    restart: always
-    ports:
-      - '15672:15672'
-      - '5672:5672'
-    environment:
-      - RABBITMQ_NODE_TYPE=stats
-      - RABBITMQ_NODE_NAME=rabbit@stats
-      - RABBITMQ_DEFAULT_USER=
-      - RABBITMQ_DEFAULT_PASS=
-    networks:
-        - avanpost
-  postgres:
-    image: postgres:14.1-alpine
-    restart: always
-    environment:
-      - POSTGRES_DB=avanpost
-      - POSTGRES_USER=
-      - POSTGRES_PASSWORD=
-    ports:
-      - '5432:5432'
+
+  api:
+   image: ${DOCKER_REGISTRY-}avanpost-api
+   build:
+      context: ../
+      dockerfile: API/AvanPost.API/Dockerfile
+   volumes:
+      - ./Images:/Images
+   ports:
+     - '8000:80'
         
 
 networks:
