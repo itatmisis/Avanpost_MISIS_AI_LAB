@@ -30,7 +30,7 @@ services:
    volumes:
       - ./Images:/Images
    ports:
-     - '80:8000'
+     - '8000:80'
         
 
 networks:
