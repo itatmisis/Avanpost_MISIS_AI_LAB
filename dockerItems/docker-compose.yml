@@ -68,7 +68,7 @@ services:
       - POSTGRES_PASSWORD=avanpostpassword
     ports:
       - '5432:5432'
-   worker_predictor:
+  worker_predictor:
     build: ../backend/worker
     restart: always
     # depends_on:
