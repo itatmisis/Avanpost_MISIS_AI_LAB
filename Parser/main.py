@@ -49,7 +49,7 @@ def save_images(links, folder_name, galery_name):
         linked = "https:" + str(link)
 
         p = requests.get(linked)
-        with open(f"{galery_name}\{folder_name}\{count}.jpg", "wb") as file:
+        with open(f"{galery_name}/{folder_name}/{count}.jpg", "wb") as file:
             file.write(p.content)
             file.close()
         count += 1

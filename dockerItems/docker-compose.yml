@@ -29,6 +29,8 @@ services:
        dockerfile: API/AvanPost.API/Dockerfile
    volumes:
        - /Images:/Images
+       - ./databases/Images:/parseImages
+       - ./Parser:/parser
    ports:
       - '8000:80'
      

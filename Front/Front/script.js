@@ -1,10 +1,7 @@
 $(function () {
     const form = document.querySelector("form"),
         fileInput = document.querySelector(".file-input")
-<<<<<<< HEAD
-=======
     getClassesToTrain()
->>>>>>> e022f76688313df3785b54368ccf404066a5953d
 
     $(document).ready(function () {
         ToAddClass();
@@ -30,7 +27,7 @@ $(function () {
         function uploadFile() {
 
             let xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://localhost:5002/Predict");
+            xhr.open("POST", "http://158.160.32.20:8000/Predict");
 
             let data = new FormData();
             console.log(form[0].files);
@@ -118,7 +115,7 @@ $(function () {
 
     $('.number-control').on('change', function () {
         console.log(parseInt(document.querySelector(".number-control").value))
-        if (parseInt(document.querySelector(".number-control").value) > 0 ) {
+        if (parseInt(document.querySelector(".number-control").value) > 0) {
             $('.add-class-btn').prop('disabled', false);
         }
         else {
@@ -206,22 +203,14 @@ function getClassesToTrain() {
         method: 'get',
         dataType: 'json',
         success: function (data) {
-<<<<<<< HEAD
             showClassesData(data)
         },
         error: function (error) {
             console.log(error)
-=======
-            //alert(data);
-            console.log(data)
-            // $(".choose-models").css("display", "inherit");
-            $(".zero-models").css("display", "none");
->>>>>>> e022f76688313df3785b54368ccf404066a5953d
         }
     });
 }
 
-<<<<<<< HEAD
 function showClassesData(data) {
     if (data.length > 0) {
         showClasses();
@@ -243,45 +232,3 @@ function showClasses() {
 }
 
 
-=======
-$(document).ready(function () {
-  
-    // build the gallery
-    $("#my_nanogallery2").nanogallery2({
-      thumbnailSelectable :   true,   // enables selection mode
-      items:[
-        {
-          src:   'berlin1.jpg',     // image url
-          srct:  'berlin1t.jpg',    // thumbnail url
-          title: 'Berlin 1'         // element title
-        },
-        { src: 'berlin2.jpg', srct: 'berlin2t.jpg', title: 'Berlin 2' },
-        { src: 'berlin3.jpg', srct: 'berlin3t.jpg', title: 'Berlin 3' }
-      ],
-      thumbnailWidth:         'auto',
-      thumbnailHeight:        150,
-      itemsBaseURL: 'https://nanogallery2.nanostudio.org/samples/',
-      thumbnailHoverEffect2: null,
-      locationHash: false
-    })
-    $(".nGY2GallerySub").css({"overflow": "visible", "touch-action": "pan-y", "user-select": "none", "-webkit-user-drag": "none", "-webkit-tap-highlight-color": "rgba(0, 0, 0, 0)", "transform": "none", "width": "700px", "height": "158px"})
-  
-  // retrieve selected items
-  $("#my_nanogallery2").on( 'itemSelected.nanogallery2 itemUnSelected.nanogallery2', function() {
-    var ngy2data = $("#my_nanogallery2").nanogallery2('data');
-    
-    // counter 
-    $('#nb_selected').text(ngy2data.gallery.nbSelected);
-    
-    // selected items
-    var sel = '';
-    ngy2data.items.forEach( function(item) {
-      if( item.selected ) {
-        sel += item.GetID() + '[' + item.title + '] ';
-      }
-    });
-    $('#selection').text(sel);
-  });
-  
-  });
->>>>>>> e022f76688313df3785b54368ccf404066a5953d

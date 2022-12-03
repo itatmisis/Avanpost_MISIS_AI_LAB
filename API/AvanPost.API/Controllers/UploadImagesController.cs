@@ -92,9 +92,9 @@ namespace AvanPost.API.Controllers
                 await _context.SaveChangesAsync();
 
                 Console.WriteLine(Directory.GetCurrentDirectory());
-                //ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = @"python main.py", Arguments = $"{request.ClassName} {request.ClassName} ./", };
-               // Process proc = new Process() { StartInfo = startInfo, };
-               // proc.Start();
+                ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = @"python /parser/main.py", Arguments = $"{request.ClassName} {request.ClassName} /ParseImages", };
+                Process proc = new Process() { StartInfo = startInfo, };
+                proc.Start();
 
 
                 return Ok();
