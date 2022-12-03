@@ -28,6 +28,22 @@ $(function () {
 
             });
 
+            $(document).on('click',
+            '.btn-test',
+            function () {
+                $(".test-prediction").css("display", "none");
+                $(".prediction").css("display", "inherit");
+                waitForImages();
+                initCardEvents();
+            });
+
+            $(document).on('click',
+            '.btn-again',
+            function () {
+                $(".test-prediction").css("display", "inherit");
+                $(".prediction").css("display", "none");
+            });
+
         function uploadFile() {
 
             let xhr = new XMLHttpRequest();
@@ -416,9 +432,13 @@ function getClassesToTrain() {
         dataType: 'json',
         success: function (data) {
             showClassesData(data)
+            $(".zero-models").css("display", "none");
+            $(".choose-models").css("display", "inherit");
         },
         error: function (error) {
             console.log(error)
+            $(".zero-models").css("display", "inherit");
+            $(".choose-models").css("display", "none");
         }
     });
 }

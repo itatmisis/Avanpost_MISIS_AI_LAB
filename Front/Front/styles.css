@@ -77,6 +77,23 @@ body{
   /* border: 1px solid red; */
 }
 
+.test-prediction{
+	display: flex;
+	justify-content:  center;
+	width: 500px;
+	/* font-family: 'Montserrat', sans-serif; */
+	padding: 0;
+	margin: 0;
+	height: 100%;
+	overflow: hidden;
+	cursor: all-scroll;
+	align-items: center;
+	margin-left: auto;
+	   margin-right: auto;
+	/* border: 1px solid red; */
+  }
+
+
 .class-name-control{
   margin-bottom:45px;
   margin-top: 5%;
@@ -304,6 +321,13 @@ button:disabled{
 .btn-again{
 	display: flex;
 	align-items: center;
+	padding: 0 20px;
+}
+
+.btn-test{
+	display: flex;
+	align-items: center;
+	margin: 20px;
 	padding: 0 20px;
 }
 
