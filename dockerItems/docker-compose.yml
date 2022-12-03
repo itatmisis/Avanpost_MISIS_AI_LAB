@@ -1,19 +1,19 @@
 version: '3.9'
 
 services:
-  rabbitmq:
-    image: 'rabbitmq:3.6-management-alpine'
-    restart: always
-    ports:
-      - '15672:15672'
-      - '5672:5672'
-    environment:
-      - RABBITMQ_NODE_TYPE=stats
-      - RABBITMQ_NODE_NAME=rabbit@stats
-      - RABBITMQ_DEFAULT_USER=
-      - RABBITMQ_DEFAULT_PASS=
-    networks:
-        - avanpost
+  # rabbitmq:
+  #   image: 'rabbitmq:3.6-management-alpine'
+  #   restart: always
+  #   ports:
+  #     - '15672:15672'
+  #     - '5672:5672'
+  #   environment:
+  #     - RABBITMQ_NODE_TYPE=stats
+  #     - RABBITMQ_NODE_NAME=rabbit@stats
+  #     - RABBITMQ_DEFAULT_USER=
+  #     - RABBITMQ_DEFAULT_PASS=
+  #   networks:
+  #       - avanpost
 
   postgres:
     image: 'postgres:14.1-alpine'
@@ -23,15 +23,16 @@ services:
     ports:
       - '5432:5432'
       
-  worker:
+  worker_predictor:
     build: ../backend/worker
     restart: always
     depends_on:
-      - rabbitmq
+      # - rabbitmq
       - postgres
+    env_file:
+      - mqtt.env
     environment:
       - DB_PORT=5432
-      - RABBITMQ_PORT=5672
       - TORCH_HOME=/ml/.cache/torch
     networks:
       - avanpost
@@ -42,7 +43,29 @@ services:
       - ../databases/models:/models
       - ../ml:/ml
     entrypoint: 
-      ./worker.py
+      ./predict_worker.py
+
+  worker_trainer:
+    build: ../backend/worker
+    restart: always
+    depends_on:
+      # - rabbitmq
+      - postgres
+    env_file:
+      - mqtt.env
+    environment:
+      - DB_PORT=5432
+      - TORCH_HOME=/ml/.cache/torch
+    networks:
+      - avanpost
+    volumes:
+      - ../backend/worker:/app
+      - ../databases/images:/images
+      - ../databases/datasets:/datasets
+      - ../databases/models:/models
+      - ../ml:/ml
+    entrypoint: 
+      ./train_worker.py
 
 networks:
   avanpost:
