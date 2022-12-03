@@ -67,10 +67,7 @@ services:
 
       - POSTGRES_DB=avanpost
       - POSTGRES_USER=avanpostuser
-      - POSTGRES_PASSWORD=avanpostpassword
-
-  
-      
+      - POSTGRES_PASSWORD=avanpostpassword   
   worker_predictor:
     build: ../backend/worker
     restart: always
@@ -94,13 +91,13 @@ services:
     entrypoint: 
       ./predict_worker.py
 
-   parser:
+  parser:
     build: ../Parser
     restart: always
     networks:
       - avanpost
     ports:
-      - 8005:8005
+      - 9000:8005
     volumes:
       - ../databases/datasets:/datasets
       - ../Parser:/app
