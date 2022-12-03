@@ -32,7 +32,6 @@ namespace AvanPost.API.Controllers
         [HttpPost(Name = "Upload")]
         public async Task<IActionResult> Upload()
         {
-            var a = Request.Form["request"];
 
             var request = JsonConvert.DeserializeObject<CreateClassRequest>(Request.Form["request"]);
 

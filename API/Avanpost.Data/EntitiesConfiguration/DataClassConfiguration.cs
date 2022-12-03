@@ -36,6 +36,10 @@ namespace Avanpost.Data.EntitiesConfiguration
                 .HasColumnType("integer")
                 .IsRequired();
 
+            builder.HasMany(x => x.Images)
+                .WithOne(x => x.DataClass)
+                .HasForeignKey(x => x.DataClassId);
+
         }
     }
 }

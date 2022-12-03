@@ -1,6 +1,7 @@
 ﻿using Avanpost.Data;
 using AvanPost.API.Configuration;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
@@ -29,9 +30,16 @@ namespace AvanPost.API.Controllers
         {
             try
             {
-                var classes = _context.DataClasses.ToList();
+                var classes = _context.DataClasses
+                    .Include(x => x.Images)
+                    .ToList();
 
-                return Ok(classes);
+                return Ok(classes.Select(x => new
+                {
+                    x.Id,
+                    x.Name,
+                    Images = x.Images.Select(x => x.Path)
+                }));
             }
             catch(Exception ex)
             {
@@ -45,9 +53,15 @@ namespace AvanPost.API.Controllers
             try
             {
                 var classes = _context.DataClasses
+                     .Include(x => x.Images)
                     .Where(x => !x.ModelClasses.Any());
 
-                return Ok(classes);
+                return Ok(classes.Select(x => new
+                {
+                    x.Id,
+                    x.Name,
+                    Images = x.Images.Select(x => x.Path)
+                }));
             }
             catch(Exception ex)
             {
