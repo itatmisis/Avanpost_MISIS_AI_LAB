@@ -17,6 +17,7 @@ namespace Avanpost.Data
         public DbSet<Model> Models { get; set; }
         public DbSet<Images> Images { get; set; }
         public DbSet<Predict> Predicts { get; set; }
+        public DbSet<Train> Trains { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -27,6 +28,7 @@ namespace Avanpost.Data
             builder.ApplyConfiguration(new ModelClassConfiguration());
             builder.ApplyConfiguration(new ImagesConfiguration());
             builder.ApplyConfiguration(new PredictConfiguration());
+            builder.ApplyConfiguration(new TrainConfiguration());
         }
 
 

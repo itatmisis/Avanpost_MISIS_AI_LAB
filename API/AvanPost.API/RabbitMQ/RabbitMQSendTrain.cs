@@ -1,36 +1,35 @@
-﻿using AvanPost.API.RabbitMQ.Contracts;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AvanPost.API.Configuration;
+using AvanPost.API.RabbitMQ.Contracts;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
-using AvanPost.API.Configuration;
-using Microsoft.Extensions.Options;
+using System.Text;
 
 namespace AvanPost.API.RabbitMQ
 {
-    public class RabbitMQSendPredict
+    public class RabbitMQSendTrain
     {
 
         private readonly ConnectionFactory _factory;
         private readonly string _queue;
 
-        public RabbitMQSendPredict(RabbitMQConfig config)
+        public RabbitMQSendTrain(RabbitMQConfig config)
         {
             var rabbitConfig = config;
-        
-            var factory = new ConnectionFactory();
 
-            factory.UserName = rabbitConfig.UserName;
-            factory.Password = rabbitConfig.Password;
-            factory.VirtualHost = rabbitConfig.VirtualHost;
-            factory.HostName = rabbitConfig.HostName;
+            _factory = new ConnectionFactory();
 
-            _queue = rabbitConfig.PredictQueue;
+            _factory.UserName = rabbitConfig.UserName;
+            _factory.Password = rabbitConfig.Password;
+            _factory.VirtualHost = rabbitConfig.VirtualHost;
+            _factory.HostName = rabbitConfig.HostName;
+
+            _queue = rabbitConfig.TrainQueue;
         }
-        public  void Send(PredictMessage message)
+        public void Send(TrainMessage message)
         {
 
-           
+
 
             using (var connection = _factory.CreateConnection())
             using (var channel = connection.CreateModel())

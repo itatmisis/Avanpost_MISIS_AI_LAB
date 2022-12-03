@@ -7,7 +7,6 @@ namespace AvanPost.API.RabbitMQ.Contracts
         [JsonProperty(PropertyName ="key")]
         public string Key { get; set; }
         [JsonProperty(PropertyName = "image_filename")]
-
         public string ImageFileName { get; set; }
     }
 }

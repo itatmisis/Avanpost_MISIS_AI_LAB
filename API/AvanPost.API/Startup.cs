@@ -37,6 +37,9 @@ namespace AvanPost.API
             var appSettings = _configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettings);
 
+            var rabbitMQConfing = _configuration.GetSection("RabbitMQConfig");
+            services.Configure<RabbitMQConfig>(rabbitMQConfing);
+
             services.AddDbContext<AvanpostContext>(options => options
                        .UseNpgsql("Host=213.178.155.140; port=5432; user id=avanpostuser; password=avanpostpassword; database=postgres")
                 .UseLowerCaseNamingConvention());
