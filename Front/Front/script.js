@@ -5,6 +5,8 @@ $(function () {
     const form = document.querySelector("form"),
         fileInput = document.querySelector(".file-input")
 
+    getClassesToTrain()
+
     $(document).ready(function () {
         ToAddClass();
         // const startingIntent = 'Модель';
@@ -164,6 +166,18 @@ function hideProgressBar() {
 function changeProgressBarValue(percents) {
     $(".progress-bar").html(`${percents}%`);
     $(".progress-bar").css('width', `${percents}%`)
+}
+
+function getClassesToTrain() {
+    $.ajax({
+        url: 'http://213.178.155.140:8000/DataClasses/AllClasses',
+        method: 'get',
+        dataType: 'json',
+        success: function (data) {
+            alert(data);
+            console.log(data)
+        }
+    });
 }
 
 
