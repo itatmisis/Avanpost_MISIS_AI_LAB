@@ -64,7 +64,7 @@ namespace AvanPost.API.Controllers
             try
             {
                 await _context.DataClasses.AddAsync(dataClass);
-                await _context.SaveChangesAsync();
+               // await _context.SaveChangesAsync();
 
              
 
