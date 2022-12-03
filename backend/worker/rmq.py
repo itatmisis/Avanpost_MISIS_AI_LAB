@@ -85,7 +85,6 @@ class RMQHandlerBase:
     def run_predictor_thread(self, connection, channel, delivery_tag, resp):
         try:
             result = self._process_request(resp.key, resp.data)
-            self._save_result(resp.key, result)
             self.logger.info(" [x] Done for key: %s" % resp.key)
         except Exception as e:
             self.logger.error("Error occured while processing request: %s" % e)
@@ -94,22 +93,29 @@ class RMQHandlerBase:
         connection.add_callback_threadsafe(cb)
                 
     def callback(self, channel, method_frame, header_frame, body, args):
+        def ack_message():
+            cb = functools.partial(self._ack_message, channel, delivery_tag)
+            connection.add_callback_threadsafe(cb)
+
         delivery_tag = method_frame.delivery_tag
         connection = args[0]
-        cmd = body.decode("utf-8")
         try:
+            cmd = body.decode("utf-8")
             self.logger.debug("[x] Received %r" % cmd)
             cmd_dict = json.loads(cmd)
             resp = self._parse_request(cmd_dict)
         except json.decoder.JSONDecodeError as e:
             self.logger.warning("Invalid JSON received from RMQ: %s" % cmd)
-            return
+            ack_message()
         except TypeError as e:
-            self.logger.warning("Error occured while getting data from JSON, invalid type:\n", e)
-            return
+            self.logger.warning("Error occured while getting data from JSON, invalid type.")
+            ack_message()
         except KeyError as e:
-            logging.warning("Error occured while parsing data from JSON, missed key:\n", e)
-            return
+            logging.warning("Error occured while parsing data from JSON, missed key.")
+            ack_message()
+        except Exception as e:
+            self.logger.error("Error occured while parsing request.")
+            ack_message()
         else:
             self.logger.debug("Request parsed successfully for key: %s" % resp.key)
             thread = threading.Thread(target=self.run_predictor_thread, args=(connection, channel, delivery_tag, resp), name=str(resp.key), daemon=True)
@@ -124,9 +130,6 @@ class RMQHandlerBase:
     def _process_request(self, request):
         raise NotImplementedError
 
-    @abstractmethod
-    def _save_result(self, key, result):
-        raise NotImplementedError
 
 class RMQHandlerTrain(RMQHandlerBase):
     logger = logging.getLogger("MQTTHandler.Train")
@@ -141,20 +144,21 @@ class RMQHandlerTrain(RMQHandlerBase):
 
     def _parse_request(self, request: json):
         key = str(request['key'])
-        dataset_path = "/datasets/" + str(request['dataset_path'])
+        dataset_path = "/datasets/default"
+        # dataset_path = "/datasets/" + str(request['dataset_path'])
         return ResponseRMQ(key, dataset_path) 
 
     def _process_request(self, key, dataset_path: str):
-        model_path = "/models/" + str(key)
+        # model_path = "/models/" + str(key)
+        model_path = "/models/model"
         self.logger.debug('Training model "%s" with dataset "%s"' % (model_path, dataset_path))
-        self._data_handler.train(model_path, dataset_path)
+        notyfier = logging.getLogger("MQTTHandler.Train.Notyfier").info
+        self._data_handler.train(model_path, dataset_path, notyfier=notyfier)
         self.logger.debug('Model "%s" trained successfully' % model_path)
         result = "Done"
         # TODO: save update progress bar in db for key
         return result
     
-    def _save_result(self, key, result):
-        self._database.save(key, result)
 
 class RMQHandlerPredict(RMQHandlerBase):
 
@@ -174,17 +178,21 @@ class RMQHandlerPredict(RMQHandlerBase):
         return ResponseRMQ(key, image_path)
     
     def _process_request(self, key, request):
-        model_path = "/models/" + str(key)
-        dataset_path = "/datasets/" + str(key)
+        # model_path = "/models/" + str(key)
+        model_path = "/models/model"
+        # dataset_path = "/datasets/" + str(key)
+        dataset_path = "/datasets/default"
         self.logger.debug('Predicting image "%s" with model "%s"' % (request, model_path))
+        self._database.in_progress(key)
         try:
             result = self._data_handler.predict(model_path, dataset_path, request)
         except FileNotFoundError as e:
-            self.logger.warning(e)
+            self.logger.warning("File not found: %s" % e)
             result = "Failed"
+            self._database.error(key)
         else:
+            self._database.update_progress(key, 100)
+            self._database.update_class_name(key, result)
             self.logger.debug('Image predicted successfully, answer is: %s' % str(result))
         return result
 
-    def _save_result(self, key, result):
-        self._database.save(key, result)

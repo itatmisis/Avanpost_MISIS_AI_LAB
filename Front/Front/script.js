@@ -141,6 +141,12 @@ $(function () {
             }
         });
 
+    $(document).on('click',
+        '.to-test-model',
+        function () {
+            ToModelTestTable();
+        })
+
     $('#parser').click(function () {
         if ($(this).is(':checked')) {
             $('.image-number').show(100);
@@ -635,7 +641,7 @@ $(document).ready(function () {
 
     function removeCardEvents(card) {
         card.removeEventListener("pointermove", updateCard);
-    }
+}
 
     function init() {
 
@@ -667,7 +673,7 @@ $(document).ready(function () {
                 },
                 "-=0.4"
             );
-    }
+}
 
     const waitForImages = () => {
         const images = [...document.querySelectorAll("img")];
@@ -708,7 +714,7 @@ $(document).ready(function () {
                             })
                             .call(() => init());
                     }
-                }
+}
             });
         });
     };

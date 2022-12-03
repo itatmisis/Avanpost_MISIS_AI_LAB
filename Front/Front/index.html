@@ -1,10 +1,10 @@
 <!doctype html>
 <html>
 
-<head>
-  <!-- <meta http-equiv="Refresh" content="1" /> -->
-  <link rel="stylesheet" type="text/css" href="styles.css" />
-  <script type="text/javascript" src="jquery-3.6.1.min.js"></script>
+  <head>
+    <!-- <meta http-equiv="Refresh" content="1" /> -->
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <script type="text/javascript" src="jquery-3.6.1.min.js"></script>
   <script type="text/javascript" src="jquery.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.js"
     integrity="sha512-CX7sDOp7UTAq+i1FYIlf9Uo27x4os+kGeoT7rgwvY+4dmjqV0IuE/Bl5hVsjnQPQiTOhAX1O2r2j5bjsFBvv/A=="
@@ -28,92 +28,108 @@
   <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.3.3/gsap.min.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.1/css/all.min.css" rel="stylesheet" />
-  <title>MISIS AI Lab</title>
-</head>
+      <title>MISIS AI Lab</title>
+    </head>
 
 <body style="background-color: black; color:#fff">
-  <header class="header">
-    <div class="menu">
-      <h1 class="logo">
-        MISIS AI Lab
-      </h1>
-      <h1 class="menu-item to-add-class">
-        Добавление класса
-      </h1>
-      <h1 class="menu-item to-train">
-        Дообучение модели
-      </h1>
-      <h1 class="menu-item to-model-version">
-        История версий модели
-      </h1>
-      <h1 class="menu-item to-test-model">
-        Тест модели
-      </h1>
-    </div>
-  </header>
-  <div class="body">
-    <div class="form-group body-add-class">
-      <div style="flex-direction: column">
-        <!-- <h3>Добавление класса</h3> -->
-        <div>
-          <div class="class-name-control">
-            <h6 for="class-name">Введите название класса на английском</h6>
+    <header class="header">
+      <div class="menu">
+        <h1 class="logo">
+          MISIS AI Lab
+        </h1>
+        <h1 class="menu-item to-add-class">
+          Добавление класса
+        </h1>
+        <h1 class="menu-item to-train">
+          Дообучение модели
+        </h1>
+        <h1 class="menu-item to-model-version">
+          История версий модели
+        </h1>
+        <h1 class="menu-item to-test-model">
+          Тест модели
+        </h1>
+      </div>
+    </header>
+    <div class="body">
+      <div class="form-group body-add-class">
+       <div style="flex-direction: column">
+          <!-- <h3>Добавление класса</h3> -->
+          <div>
+            <div class="class-name-control">
+              <h6 for="class-name">Введите название класса на английском</h6>
             <input class="form-control" id="class-name" type="text" />
-          </div>
-          <div class="wrapper">
+            </div>
+            <div class="wrapper">
             <form class="form1" enctype="multipart/form-data" action="#">
               <input class="file-input" type="file" multiple="multiple" name="file" hidden>
-              <div class="img-icon"><i class="far fa-image"></i></div>
-              <p>Выберите несколько изображений</p>
-            </form>
-          </div>
-          <div>
+                <div class="img-icon"><i class="far fa-image"></i></div>
+                <p>Выберите несколько изображений</p>
+              </form>
+            </div>
+            <div>
             <input type="checkbox" id="parser" name="parser">
-            <label for="parser">Подгрузить изображения из парсера</label>
-          </div>
+              <label for="parser">Подгрузить изображения из парсера</label>
+            </div>
           <div class="image-number">
             <p for="image-number">Введите количество картинок</p>
             <input class="number-control" id="image-number" type="text" />
           </div>
-          <div class="progress-bar-block" style="visibility: hidden">
-            <div class="progress">
+            <div class="progress-bar-block" style="visibility: hidden">
+              <div class="progress">
               <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0"
                 aria-valuemax="100">25%</div>
+              </div>
             </div>
-          </div>
           <button
             class="flex mx-auto mt-16 text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-600 rounded text-lg add-class-btn">Добавить</button>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="body-train">
-      <div class="zero-models">
-        <span class="zero-models-text">Нет классов для дообучения модели :(</span>
-        <br />
-        <button class="zero-models-button">Добавить</button>
-      </div>
+        </div>
+      <div class="body-train">
+        <div class="zero-models">
+          <span class="zero-models-text">Нет классов для дообучения модели :(</span>
+          <br />
+          <button class="zero-models-button">Добавить</button>
+        </div>
+        <div class="data-classes">
+          <div id="my_nanogallery2" 
+          data-nanogallery2='{ 
+             "itemsBaseURL":           "https://nanogallery2.nanostudio.org/samples/",
+             "thumbnailWidth":         "50px",
+             "thumbnailSelectable":    true,
+             "thumbnailHoverEffect2":  null
+             }'> nanogallery2
+            <a href="berlin1.jpg" data-ngthumb="berlin1t.jpg" data-ngdesc="">Berlin 1 - image</a>
+            <a href="berlin2.jpg" data-ngthumb="berlin2t.jpg" data-ngdesc="">Berlin 2 - image</a>
+            <a href="berlin3.jpg" data-ngthumb="berlin3t.jpg" data-ngdesc="">Berlin 3 - image</a>
+            <a href="" data-ngkind="album" data-ngid="1000" data-ngthumb="berlin3t.jpg" data-ngdesc="">Berlin 3 - album</a>
+           </div>
+        </div>
       <div class="choose-models">
         <h3>
           Выберите классы
           <!-- <a href="https://nanogallery2.nanostudio.org/" target="_blank">[more...]</a> -->
         </h3>
+        
         <div id="my_nanogallery2"></div>
         <button
           class="flex mx-auto mt-16 text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-600 rounded text-lg btn-teach">
           Дообучить
         </button>
+ </div>
       </div>
-    </div>
-  </div>
-  <div class="body-version-history">
+      </div>
+      
+      <div class="body-version-history">
     <ul class="tree">
       <li class="parent" id="0"> <span>Первая версия модели</span>
       </li>
     </ul>
-  </div>
+      </div>
   </div>
 
-  <div class="body-model-test">
+      <div class="body-model-test">
     <div class="test-prediction">
     <div class="wrapper">
       <form class="form2" enctype="multipart/form-data" action="#">
@@ -210,8 +226,8 @@
       <span></span>
     </div>
   </div> -->
-  </div>
-  </div>
+      </div>
+    </div>
 </body>
 
 </html>

@@ -77,6 +77,8 @@ namespace AvanPost.API.Controllers
                     {
                         var filePath = Path.Combine(imagesFolder, file.FileName);
 
+                        Console.WriteLine(filePath);
+
                         using (var stream = System.IO.File.Create(filePath))
                         {
                             await file.CopyToAsync(stream);

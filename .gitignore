@@ -240,3 +240,6 @@ docker/mongo-volume/
 PKG-INFO
 *.egg-info
 *.egg
+*.pth
+*.pt
+databases/images/   

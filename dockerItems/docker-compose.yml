@@ -40,7 +40,7 @@ services:
       - '8001:80'
     restart: always
     volumes:
-      - /Images:/usr/share/nginx/html
+      - ../databases/images:/usr/share/nginx/html
       
   worker_trainer:
     build: ../backend/worker
@@ -68,6 +68,9 @@ services:
       - POSTGRES_DB=avanpost
       - POSTGRES_USER=avanpostuser
       - POSTGRES_PASSWORD=avanpostpassword
+
+  
+      
   worker_predictor:
     build: ../backend/worker
     restart: always
@@ -90,16 +93,19 @@ services:
       - ../ml:/ml
     entrypoint: 
       ./predict_worker.py
-      
-  parse:
-    image: ${DOCKER_REGISTRY-}parse
-    build:
-       context: ../
-       dockerfile: Parse/Dockerfile
-    volumes:
-       - ./databases/Images:/parseImages
+
+   parser:
+    build: ../Parser
+    restart: always
+    networks:
+      - avanpost
     ports:
-      - '8111:8000'
+      - 8005:8005
+    volumes:
+      - ../databases/datasets:/datasets
+      - ../Parser:/app
+    entrypoint:
+      ./server.py
     
 networks:
   avanpost:
