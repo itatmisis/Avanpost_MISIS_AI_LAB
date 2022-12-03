@@ -32,6 +32,7 @@ services:
     environment:
       - DB_PORT=5432
       - RABBITMQ_PORT=5672
+      - TORCH_HOME=/ml/.cache/torch
     networks:
       - avanpost
     volumes:
@@ -39,6 +40,9 @@ services:
       - ../databases/images:/images
       - ../databases/datasets:/datasets
       - ../databases/models:/models
+      - ../ml:/ml
+    entrypoint: 
+      ./worker.py
 
 networks:
   avanpost:

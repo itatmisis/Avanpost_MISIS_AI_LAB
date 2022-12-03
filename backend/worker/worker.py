@@ -11,6 +11,8 @@ from collections import namedtuple
 import requests as req
 import threading
 import db_handle
+import sys
+from predictor import Predictor
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("Worker")
@@ -27,20 +29,28 @@ class RMQHandlerBase:
         self.host = hostname
         self.worker_port = worker_port
         self._thread = None
+        self._threads = []
         connection_params = pika.ConnectionParameters(host=self.host, port=self.worker_port)
         pika.BlockingConnection = RMQHandlerBase.stable_connection(pika.BlockingConnection)
         self.connection = pika.BlockingConnection(connection_params)
         
         self.channel = self.connection.channel()
-    
+        
         self.channel.queue_declare(queue=queueName, durable=True)
         self.channel.basic_qos(prefetch_count=1)
-        self.channel.basic_consume(queue=queueName, on_message_callback=self.callback, auto_ack=True)
+        self.channel.basic_consume(queue=queueName, on_message_callback=self.callback, auto_ack=False)
         # self.channel.start_consuming = RMQHandlerBase.stable_connection(self.channel.start_consuming)
     
     def start(self, threadName):
         self._thread = threading.Thread(target=self.channel.start_consuming, name=threadName)
-        self._thread.start()
+        while True:
+            try:
+                self._thread.start()
+            except Exception as e:
+                self.logger.error("Error occured while starting thread: %s" % e)
+                time.sleep(0.5)
+            else:
+                break
     
     @staticmethod
     def stable_connection(func):
@@ -58,7 +68,14 @@ class RMQHandlerBase:
             return result
         return wrapped
 
-
+    def run_predictor_thread(self, resp, method):
+        try:
+            result = self._process_request(resp.key, resp.data)
+            self._save_result(resp.key, result)
+            self.logger.info(" [x] Done for key: %s" % resp.key)
+        except Exception as e:
+            self.logger.error("Error occured while processing request: %s" % e)
+        self.channel.basic_ack(delivery_tag=method.delivery_tag)
 
     def callback(self, ch, method, properties, body):
         cmd = body.decode("utf-8")
@@ -77,9 +94,9 @@ class RMQHandlerBase:
             return
         else:
             self.logger.debug("Request parsed successfully for key: %s" % resp.key)
-            result = self._process_request(resp.key, resp.data)
-            self._save_result(resp.key, result)
-            self.logger.info(" [x] Done for key: %s" % resp.key)
+            thread = threading.Thread(target=self.run_predictor_thread, args=(resp, method), name=str(resp.key), daemon=True)
+            thread.start()
+            self._threads.append(thread)
 
     @abstractmethod
     def _parse_request(self, request: json):
@@ -106,11 +123,15 @@ class RMQHandlerTrain(RMQHandlerBase):
 
     def _parse_request(self, request: json):
         key = str(request['key'])
-        dataset_path = "/datasets/" + key
+        dataset_path = "/datasets/" + str(request['dataset_path'])
         return ResponseRMQ(key, dataset_path) 
 
     def _process_request(self, key, dataset_path: str):
-        result = self._data_handler.train(dataset_path)
+        model_path = "/models/" + str(key)
+        self.logger.debug('Training model "%s" with dataset "%s"' % (model_path, dataset_path))
+        self._data_handler.train(model_path, dataset_path)
+        self.logger.debug('Model "%s" trained successfully' % model_path)
+        result = "Done"
         # TODO: save update progress bar in db for key
         return result
     
@@ -131,28 +152,24 @@ class RMQHandlerPredict(RMQHandlerBase):
 
     def _parse_request(self, request: json):
         key = str(request['key'])
-        image_path = "/images/" + key
+        image_path = "/images/" + str(request['image_path'])
         return ResponseRMQ(key, image_path)
     
     def _process_request(self, key, request):
-        model = self._load_model(key)
-        result = self._data_handler.predict(model, request)
+        model_path = "/models/" + str(key)
+        dataset_path = "/datasets/" + str(key)
+        self.logger.debug('Predicting image "%s" with model "%s"' % (request, model_path))
+        try:
+            result = self._data_handler.predict(model_path, dataset_path, request)
+        except FileNotFoundError as e:
+            self.logger.warning(e)
+            result = "Failed"
+        else:
+            self.logger.debug('Image predicted successfully, value is: %s' % str(result))
         return result
-
-    def _load_model(self, key):
-        return "mock model for key " + key
 
     def _save_result(self, key, result):
         self._database.save(key, result)
-
-class NetworkMock:
-    @staticmethod
-    def train(dataset):
-        "mock result for training dataset " + dataset
-    
-    @staticmethod
-    def predict(model, image_path):
-        "mock result for model " + model + " and image " + image_path
 
 def main():
     logging.getLogger("MQTTHandler").setLevel(logging.DEBUG)
@@ -160,8 +177,9 @@ def main():
     logging.getLogger("pika").setLevel(logging.FATAL)
     DBPort = os.environ.get("DB_PORT")
     rabbitmqPort = os.environ.get("RABBITMQ_PORT")
-    rmq_train = RMQHandlerTrain("rabbitmq", rabbitmqPort, "train", db_handle.TrainModelDBMock(DBPort), NetworkMock)
-    rmq_predict = RMQHandlerPredict("rabbitmq", rabbitmqPort, "predict", db_handle.PredictModelDBMock(DBPort), NetworkMock)
+    predictor = Predictor()
+    rmq_train = RMQHandlerTrain("rabbitmq", rabbitmqPort, "train", db_handle.TrainModelDBMock(DBPort), predictor)
+    rmq_predict = RMQHandlerPredict("rabbitmq", rabbitmqPort, "predict", db_handle.PredictModelDBMock(DBPort), predictor)
     rmq_train.start()
     rmq_predict.start()
     logger.info(" [*] Waiting for messages. To exit press CTRL+C")
