@@ -22,15 +22,15 @@ services:
       - POSTGRES_PASSWORD=avanpostpassword
     ports:
       - '5432:5432'
-  # api:
-  #  image: ${DOCKER_REGISTRY-}avanpost-api
-  #  build:
-  #     context: ../
-  #     dockerfile: API/AvanPost.API/Dockerfile
-  #  volumes:
-  #     - /Images:/Images
-  #  ports:
-  #    - '8000:80'
+  api:
+   image: ${DOCKER_REGISTRY-}avanpost-api
+   build:
+       context: ../
+       dockerfile: API/AvanPost.API/Dockerfile
+   volumes:
+       - /Images:/Images
+   ports:
+      - '8000:80'
      
   nginx-static:
     image: nginx:latest

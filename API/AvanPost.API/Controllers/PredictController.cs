@@ -1,6 +1,7 @@
 ﻿using Avanpost.Data;
 using Avanpost.Data.Entities;
 using AvanPost.API.Configuration;
+using AvanPost.API.Models.Response;
 using AvanPost.API.RabbitMQ;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AvanPost.API.Controllers
@@ -44,7 +46,7 @@ namespace AvanPost.API.Controllers
 
             var files = Request.Form.Files;
 
-            var keys = new List<string>();
+            var keys = new List<Tuple<string, string>>();
 
             try
             {
@@ -73,13 +75,36 @@ namespace AvanPost.API.Controllers
                             ImageFileName = file.FileName,
                         });
 
-                        keys.Add(key);
+                        keys.Add(new Tuple<string, string>(key, file.FileName));
 
 
                     }
                 }
-
                 await _context.SaveChangesAsync();
+
+
+                while (keys.Any())
+                {
+                    var predicts = new List<PredictResponse>();
+
+
+                    var result = _context.Predicts.Where(x => keys.Select(x => x.Item1).Contains(x.Key));
+
+                    predicts.AddRange(result.Select(x =>
+                     new PredictResponse
+                     {
+                         Percent = x.Percent,
+                         ClassName = x.ClassName,
+                         FilaName = keys.FirstOrDefault(k => k.Item1 == x.Key).Item2
+                     }));
+
+
+                    keys = keys.Where(x => result.Select(y => y.Key).Contains(x.Item1)).ToList();
+                }
+
+
+
+
                 return Ok();
             }
             catch (Exception ex)
