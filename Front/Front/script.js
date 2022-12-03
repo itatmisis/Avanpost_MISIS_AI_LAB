@@ -1,6 +1,8 @@
 $(function () {
-    const form = document.querySelector("form"),
-        fileInput = document.querySelector(".file-input")
+    const form = document.querySelector(".form1"),
+        fileInput = document.querySelector(".file-input"), 
+        form2 = document.querySelector(".form2"),
+        fileInput2 = document.querySelector(".file-input-2")
     getClassesToTrain()
 
     $(document).ready(function () {
@@ -11,6 +13,10 @@ $(function () {
 
         form.addEventListener("click", () => {
             fileInput.click();
+        });
+
+        form2.addEventListener("click", () => {
+            fileInput2.click();
         });
 
         $(document).on('click',
@@ -309,8 +315,8 @@ function ToModelTestTable() {
     "border-bottom": "0px "});
     $(".to-test-model").css({"padding-bottom": "8px",
     "border-bottom": "2px solid #8BFBFF"});
-    // $(".test-prediction").css("display", "inherit");
-    // $(".prediction").css("display", "none");
+    $(".test-prediction").css("display", "inherit");
+    $(".prediction").css("display", "none");
 }
 
 
