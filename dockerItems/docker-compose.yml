@@ -1,46 +1,46 @@
 version: '3.9'
 services:
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-    restart: always
-    ports:
-      - '15672:15672'
-      - '5672:5672'
-    environment:
-      - RABBITMQ_NODE_TYPE=stats
-      - RABBITMQ_NODE_NAME=rabbit@stats
-      - RABBITMQ_DEFAULT_USER=avanpostuser
-      - RABBITMQ_DEFAULT_PASS=avanpostpassword
-    networks:
-        - avanpost
-  postgres:
-    image: postgres:14.1-alpine
-    restart: always
-    environment:
-      - POSTGRES_DB=avanpost
-      - POSTGRES_USER=avanpostuser
-      - POSTGRES_PASSWORD=avanpostpassword
-    ports:
-      - '5432:5432'
-  api:
-   image: ${DOCKER_REGISTRY-}avanpost-api
-   build:
-       context: ../
-       dockerfile: API/AvanPost.API/Dockerfile
-   volumes:
-       - /Images:/Images
-       - ./databases/Images:/parseImages
-       - ./Parser:/parser
-   ports:
-      - '8000:80'
+  # rabbitmq:
+  #   image: rabbitmq:3-management-alpine
+  #   restart: always
+  #   ports:
+  #     - '15672:15672'
+  #     - '5672:5672'
+  #   environment:
+  #     - RABBITMQ_NODE_TYPE=stats
+  #     - RABBITMQ_NODE_NAME=rabbit@stats
+  #     - RABBITMQ_DEFAULT_USER=avanpostuser
+  #     - RABBITMQ_DEFAULT_PASS=avanpostpassword
+  #   networks:
+  #       - avanpost
+  # postgres:
+  #   image: postgres:14.1-alpine
+  #   restart: always
+  #   environment:
+  #     - POSTGRES_DB=avanpost
+  #     - POSTGRES_USER=avanpostuser
+  #     - POSTGRES_PASSWORD=avanpostpassword
+  #   ports:
+  #     - '5432:5432'
+  # api:
+  #  image: ${DOCKER_REGISTRY-}avanpost-api
+  #  build:
+  #      context: ../
+  #      dockerfile: API/AvanPost.API/Dockerfile
+  #  volumes:
+  #      - /Images:/Images
+  #      - ./databases/Images:/parseImages
+  #      - ./Parser:/parser
+  #  ports:
+  #     - '8000:80'
      
-  nginx-static:
-    image: nginx:latest
-    ports:
-      - '8001:80'
-    restart: always
-    volumes:
-      - /Images:/usr/share/nginx/html
+  # nginx-static:
+  #   image: nginx:latest
+  #   ports:
+  #     - '8001:80'
+  #   restart: always
+  #   volumes:
+  #     - /Images:/usr/share/nginx/html
       
   worker_trainer:
     build: ../backend/worker
@@ -68,8 +68,7 @@ services:
       - POSTGRES_DB=avanpost
       - POSTGRES_USER=avanpostuser
       - POSTGRES_PASSWORD=avanpostpassword
-    ports:
-      - '5432:5432'
+
   worker_predictor:
     build: ../backend/worker
     restart: always

@@ -152,7 +152,8 @@ class RMQHandlerTrain(RMQHandlerBase):
         # model_path = "/models/" + str(key)
         model_path = "/models/model"
         self.logger.debug('Training model "%s" with dataset "%s"' % (model_path, dataset_path))
-        self._data_handler.train(model_path, dataset_path)
+        notyfier = logging.getLogger("MQTTHandler.Train.Notyfier").info
+        self._data_handler.train(model_path, dataset_path, notyfier=notyfier)
         self.logger.debug('Model "%s" trained successfully' % model_path)
         result = "Done"
         # TODO: save update progress bar in db for key
