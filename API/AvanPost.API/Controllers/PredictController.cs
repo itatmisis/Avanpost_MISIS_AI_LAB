@@ -26,11 +26,11 @@ namespace AvanPost.API.Controllers
         private readonly string _imageFolder;
 
 
-        public PredictController(ILogger<UploadImagesController> logger, AvanpostContext context, IOptions<AppSettings> options)
+        public PredictController(ILogger<UploadImagesController> logger, AvanpostContext context, IOptions<AppSettings> options, IOptions<RabbitMQConfig> rabbitConfig)
         {
             _logger = logger;
             _context = context;
-            _rabbitPredict = new RabbitMQSendPredict();
+            _rabbitPredict = new RabbitMQSendPredict(rabbitConfig.Value);
             _imageFolder = Path.Combine(options.Value.ImagesFolder, PREDICT_FOLDER);
 
             if (!Directory.Exists(_imageFolder))

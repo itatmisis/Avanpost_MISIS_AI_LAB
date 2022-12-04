@@ -10,6 +10,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using AvanPost.API.ParserApi;
 
 namespace AvanPost.API.Controllers
 {
@@ -22,12 +23,14 @@ namespace AvanPost.API.Controllers
         private readonly ILogger<UploadImagesController> _logger;
         private readonly AvanpostContext _context;
         private readonly AppSettings _settings;
+        private readonly ParserApiCaller _parserApi;
 
         public UploadImagesController(ILogger<UploadImagesController> logger, AvanpostContext context, IOptions<AppSettings> options)
         {
             _logger = logger;
             _context = context;
             _settings = options.Value;
+            _parserApi = new ParserApiCaller();
         }
 
         [HttpPost(Name = "Upload")]
@@ -38,13 +41,13 @@ namespace AvanPost.API.Controllers
 
             if(request == null)
             {
-                return BadRequest("Отсутствует request в FormData");
+                return BadRequest("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ request пїЅ FormData");
             }
 
 
             if (string.IsNullOrEmpty(request.ClassName))
             {
-                return BadRequest("Название класса не может быть пустым");
+                return BadRequest("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ");
             }
             var files = Request.Form.Files;
 
@@ -64,7 +67,7 @@ namespace AvanPost.API.Controllers
             try
             {
                 await _context.DataClasses.AddAsync(dataClass);
-               // await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
              
 
@@ -89,19 +92,27 @@ namespace AvanPost.API.Controllers
                     }
                 }
 
-                //await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
-                Console.WriteLine(Directory.GetCurrentDirectory());
-                ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = @"python /parser/main.py", Arguments = $"{request.ClassName} {request.ClassName} /ParseImages", };
-                Process proc = new Process() { StartInfo = startInfo, };
-                proc.Start();
+                try
+                {
+                    await _parserApi.Send(new ParserApi.Models.ParserRequest()
+                    {
+                        ClassName = request.ClassName,
+                        FolderName = "/ParserImages"
+                    });
+                }
+                catch(Exception ex)
+                {
+
+                }
 
 
                 return Ok();
             }
             catch (Exception ex)
             {
-                return BadRequest("Ошибка во время создания класса");
+                return BadRequest("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ");
             }
         }
     }

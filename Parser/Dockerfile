@@ -32,3 +32,4 @@ RUN pip3 install fastapi uvicorn requests selenium
 RUN pip3 install beautifulsoup4
 
 WORKDIR /app
+CMD ["python", "app/server.py"]

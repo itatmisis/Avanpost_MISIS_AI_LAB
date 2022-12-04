@@ -40,7 +40,7 @@ def get_links(page):
     return links
 
 
-def save_images(links, folder_name):
+def save_images(links, folder_name, amount=100):
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
 
@@ -54,6 +54,8 @@ def save_images(links, folder_name):
             file.write(p.content)
             file.close()
         count += 1
+        if count >= amount:
+            break
 
 
 # objects = {'газонокосилка': 'lawnmower',
