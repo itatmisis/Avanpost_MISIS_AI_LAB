@@ -37,6 +37,7 @@ namespace AvanPost.API.Controllers
                 {
                     if (Directory.Exists(Path.Combine("/parserImages", request.ClassName))){
 
+                        Console.WriteLine(string.Join(", ", Directory.GetFiles("/parseImages"));
                         var files = Directory.GetFiles(Path.Combine("/parserImages", request.ClassName));
                         if (files.Any())
                         {
