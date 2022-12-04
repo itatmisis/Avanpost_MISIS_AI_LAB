@@ -30,14 +30,14 @@ namespace AvanPost.API.Controllers
                 await _parserApi.Send(new ParserApi.Models.ParserRequest()
                 {
                     ClassName = request.ClassName,
-                    FolderName = "/ParserImages"
+                    FolderName = "/parserImages"
                 });
 
                 for(int i = 0; i < 10; i++)
                 {
-                    if (Directory.Exists(Path.Combine("/ParserImages", request.ClassName))){
+                    if (Directory.Exists(Path.Combine("/parserImages", request.ClassName))){
 
-                        var files = Directory.GetFiles(Path.Combine("/ParserImages/default", request.ClassName));
+                        var files = Directory.GetFiles(Path.Combine("/parserImages", request.ClassName));
                         if (files.Any())
                         {
                             return Ok(files.Select(x => Path.GetFileName(x)));
