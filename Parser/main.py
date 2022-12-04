@@ -6,7 +6,7 @@ import os
 import time
 import sys
 import requests
-
+from pyvirtualdisplay import Display
 
 def get_page_selenium(object):
     url = f'https://yandex.ru/images/search?text={object}&from=tabbar'
@@ -15,6 +15,13 @@ def get_page_selenium(object):
     op = webdriver.ChromeOptions()
     # отключить отображение браузера
     op.add_argument('headless')
+    op.add_argument('window-size=1920x935')
+    op.add_argument('--disable-gpu')
+    op.add_argument('--no-sandbox')
+    op.add_argument('--disable-dev-shm-usage')
+
+    display = Display(visible=0, size=(800, 800))  
+    display.start()
     driver = webdriver.Chrome(executable_path=EXE_PATH, options=op)
     driver.get(url)
 

@@ -18,12 +18,12 @@ namespace AvanPost.API.RabbitMQ
         {
             var rabbitConfig = config;
         
-            var factory = new ConnectionFactory();
+            _factory = new ConnectionFactory();
 
-            factory.UserName = rabbitConfig.UserName;
-            factory.Password = rabbitConfig.Password;
-            factory.VirtualHost = rabbitConfig.VirtualHost;
-            factory.HostName = rabbitConfig.HostName;
+            _factory.UserName = rabbitConfig.UserName;
+            _factory.Password = rabbitConfig.Password;
+            _factory.VirtualHost = rabbitConfig.VirtualHost;
+            _factory.HostName = rabbitConfig.HostName;
 
             _queue = rabbitConfig.PredictQueue;
         }

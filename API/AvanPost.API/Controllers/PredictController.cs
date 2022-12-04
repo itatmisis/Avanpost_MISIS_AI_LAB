@@ -1,4 +1,4 @@
-﻿using Avanpost.Data;
+using Avanpost.Data;
 using Avanpost.Data.Entities;
 using AvanPost.API.Configuration;
 using AvanPost.API.Models.Response;
@@ -45,14 +45,11 @@ namespace AvanPost.API.Controllers
 
 
             var files = Request.Form.Files;
-
+            Console.WriteLine(files);
             var keys = new List<Tuple<string, string>>();
-
-            try
-            {
-
                 foreach (var file in files)
-                {
+                {   
+                     Console.WriteLine(file);
                     if (file.Length > 0)
                     {
                         var filePath = Path.Combine(_imageFolder, file.FileName);
@@ -62,11 +59,7 @@ namespace AvanPost.API.Controllers
                             await file.CopyToAsync(stream);
 
                         }
-                        await _context.Images.AddAsync(new Images()
-                        {
-                            Path = Path.Combine(_imageFolder, file.FileName),
-                        });
-
+                        
                         var key = Guid.NewGuid().ToString();
 
                         _rabbitPredict.Send(new RabbitMQ.Contracts.PredictMessage()
@@ -97,20 +90,14 @@ namespace AvanPost.API.Controllers
                      {
                          Percent = x.Percent,
                          ClassName = x.ClassName,
-                         FilaName = keys == null ? null: keys.FirstOrDefault(k => k.Item1 == x.Key).Item2
-                     })) ;
+                         FilaName = "1"//keys.FirstOrDefault(k => k.Item1 == x.Key).Item2
+                     }));
 
 
                     keys = keys.Where(x => result.Select(y => y.Key).Contains(x.Item1)).ToList();
                 }
 
                 return Ok(predicts);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine();
-                return BadRequest();
-            }
         }
     }
 }
