@@ -31,7 +31,7 @@ services:
        dockerfile: API/AvanPost.API/Dockerfile
    volumes:
        - ../databases/images:/parseImages
-       - ../databases/datasets/defaulr:/trainImagess
+       - ../databases/datasets/default:/trainImages
    ports:
       - '8000:80'
      
