@@ -27,30 +27,19 @@ namespace AvanPost.API.Controllers
         {
             try
             {
-                await _parserApi.Send(new ParserApi.Models.ParserRequest()
+               var response =  await _parserApi.Send(new ParserApi.Models.ParserRequest()
                 {
                     ClassName = request.ClassName,
                     FolderName = "/parserImages"
                 });
 
-                for(int i = 0; i < 10; i++)
+                if(response?.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    Console.WriteLine(string.Join(", ", Directory.GetFiles("/parseImages")));
-                    Console.WriteLine(Path.Combine("/parserImages", request.ClassName));
-                    if (Directory.Exists(Path.Combine("/parserImages", request.ClassName)) ||  System.IO.File.Exists(Path.Combine("/parserImages", request.ClassName))){
-
-                       
-                        var files = Directory.GetFiles(Path.Combine("/parserImages", request.ClassName));
-                        if (files.Any())
-                        {
-                            return Ok(files.Select(x => Path.GetFileName(x)));
-                        }
-                    }
-                    await Task.Delay(1000);
-
-
+                    return Ok(Directory.GetFiles($"//parserImages//{request.ClassName}").Select(x => x));
                 }
-                return Ok(new string[] { });
+
+
+                return BadRequest();
             }
             catch (Exception ex)
             {
