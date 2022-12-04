@@ -4,5 +4,6 @@
     {
         public string ImagesFolder { get; set; }
         public string ConnectionString { get; set; }
+        public string ToTrainImages { get; set; }
     }
 }

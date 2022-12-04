@@ -243,4 +243,5 @@ PKG-INFO
 *.pth
 *.pt
 databases/images/
-databases/default/   
+databases/default/  
+dockerItems/pg_data/

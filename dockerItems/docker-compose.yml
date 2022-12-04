@@ -20,13 +20,18 @@ services:
       - postgres.env
     ports:
       - '5432:5432'
+    environment:
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
   api:
    image: ${DOCKER_REGISTRY-}avanpost-api
    build:
        context: ../
        dockerfile: API/AvanPost.API/Dockerfile
    volumes:
-       - ../databases/datasets/default:/parseImages
+       - ../databases/images:/parseImages
+       - ../databases/datasets/default:/trainImages
    ports:
       - '8000:80'
      
@@ -95,7 +100,7 @@ services:
     ports:
       - 9000:8005
     volumes:
-      - ../databases/datasets:/datasets
+      - ../databases/images:/datasets
       - ../Parser:/app
     entrypoint:
       ./server.py
