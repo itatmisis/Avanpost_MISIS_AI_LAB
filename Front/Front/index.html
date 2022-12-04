@@ -1,237 +1,259 @@
-<!doctype html>
-<html>
 
-  <head>
-    <!-- <meta http-equiv="Refresh" content="1" /> -->
-    <link rel="stylesheet" type="text/css" href="styles.css" />
-    <script type="text/javascript" src="jquery-3.6.1.min.js"></script>
-  <script type="text/javascript" src="jquery.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.js"
-    integrity="sha512-CX7sDOp7UTAq+i1FYIlf9Uo27x4os+kGeoT7rgwvY+4dmjqV0IuE/Bl5hVsjnQPQiTOhAX1O2r2j5bjsFBvv/A=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-  <link href="https://cdn.jsdelivr.net/npm/nanogallery2@3/dist/css/nanogallery2.min.css" rel="stylesheet"
-    type="text/css">
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/nanogallery2@3/dist/jquery.nanogallery2.min.js">
-  </script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-  <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/1.7.10/jsPlumb.min.js"
-    integrity="sha512-A1gTsaWUck7mkEu6D8/938PKlkVS79TkgqAloQbGU4bhOPUBS9JVknN5x++J3eRNO8g6D/T3kqhHBd4KkqRNxg=="
-    crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.1.2/svg.min.js"
-    integrity="sha512-I+rKw3hArzZIHzrkdELbKqrXfkSvw/h0lW/GgB8FThaBVz2e5ZUlSW8kY8v3q6wq37eybIwyufkEZxe4qSlGcg=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="script.js" type="text/javascript"></script>
-  <!-- <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet"> -->
-  <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.3.3/gsap.min.js"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.1/css/all.min.css" rel="stylesheet" />
-      <title>MISIS AI Lab</title>
-    </head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"> 
+<link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+<meta name="apple-mobile-web-app-title" content="CodePen">
+<link rel="shortcut icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+<link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg" color="#111" />
+<script type="text/javascript" src="jquery-3.6.1.min.js"></script>
+<script type="text/javascript" src="script.js"></script>
+  <meta charset="utf-8">
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <title>MISIS AI Lab</title>
+  <link rel="stylesheet" media="screen" href="https://cpwebassets.codepen.io/assets/fullpage/fullpage-96f5da14bc71e5883d519b4eb5e93297dde552c2f91a97fcfb30035219cf1c1a.css" />
+  <link rel="stylesheet" href="style.css">
+<link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+<meta name="apple-mobile-web-app-title" content="CodePen">
+<link rel="shortcut icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+<link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg" color="#111" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.15/dist/sweetalert2.all.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 
-<body style="background-color: black; color:#fff">
-    <header class="header">
-      <div class="menu">
-        <h1 class="logo">
-          MISIS AI Lab
-        </h1>
-        <h1 class="menu-item to-add-class">
-          Добавление класса
-        </h1>
-        <h1 class="menu-item to-train">
-          Дообучение модели
-        </h1>
-        <h1 class="menu-item to-model-version">
-          История версий модели
-        </h1>
-        <h1 class="menu-item to-test-model">
-          Тест модели
-        </h1>
-      </div>
-    </header>
-    <div class="body">
-      <div class="form-group body-add-class">
-       <div style="flex-direction: column">
-          <!-- <h3>Добавление класса</h3> -->
-          <div>
-            <div class="class-name-control">
-              <h6 for="class-name">Введите название класса на английском</h6>
-            <input class="form-control" id="class-name" type="text" />
-            </div>
-            <div class="wrapper">
-            <form class="form1" enctype="multipart/form-data" action="#">
-              <input class="file-input" type="file" multiple="multiple" name="file" hidden>
-                <div class="img-icon"><i class="far fa-image"></i></div>
-                <p>Выберите несколько изображений</p>
-              </form>
-            </div>
-            <div>
-            <input type="checkbox" id="parser" name="parser">
-              <label for="parser">Подгрузить изображения из парсера</label>
-            </div>
-          <div class="image-number">
-            <p for="image-number">Введите количество картинок</p>
-            <input class="number-control" id="image-number" type="text" />
-          </div>
-            <div class="progress-bar-block" style="visibility: hidden">
-              <div class="progress">
-              <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0"
-                aria-valuemax="100">25%</div>
-              </div>
-            </div>
-          <button
-            class="flex mx-auto mt-16 text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-600 rounded text-lg add-class-btn">Добавить</button>
-          </div>
+<title>MISIS AI Lab</title>
+  <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+<body>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+        <div class="pre-loader">
+            <i class="fas fa-spinner loader"></i>
         </div>
-        </div>
-      <div class="body-train">
-        <div class="zero-models">
-          <span class="zero-models-text">Нет классов для дообучения модели :(</span>
-          <br />
-          <button class="zero-models-button">Добавить</button>
-        </div>
-        <div class="data-classes">
-          <div id="my_nanogallery2" 
-          data-nanogallery2='{ 
-             "itemsBaseURL":           "https://nanogallery2.nanostudio.org/samples/",
-             "thumbnailWidth":         "50px",
-             "thumbnailSelectable":    true,
-             "thumbnailHoverEffect2":  null
-             }'> nanogallery2
-            <a href="berlin1.jpg" data-ngthumb="berlin1t.jpg" data-ngdesc="">Berlin 1 - image</a>
-            <a href="berlin2.jpg" data-ngthumb="berlin2t.jpg" data-ngdesc="">Berlin 2 - image</a>
-            <a href="berlin3.jpg" data-ngthumb="berlin3t.jpg" data-ngdesc="">Berlin 3 - image</a>
-            <a href="" data-ngkind="album" data-ngid="1000" data-ngthumb="berlin3t.jpg" data-ngdesc="">Berlin 3 - album</a>
-           </div>
-        </div>
-      <div class="choose-models">
-        <h3>
-          Выберите классы
-          <!-- <a href="https://nanogallery2.nanostudio.org/" target="_blank">[more...]</a> -->
-        </h3>
+        <button class="day"><i class="fas fa-sun"></i></button>
+        <button class="night"> <i class="fas fa-moon"></i></button>
+
+
+    <header>
         
-        <div id="my_nanogallery2"></div>
-        <button
-          class="flex mx-auto mt-16 text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-600 rounded text-lg btn-teach">
-          Дообучить
-        </button>
- </div>
-      </div>
-      </div>
+        <nav class="navbar">
+            <h1><a href="index.html" class="logo">MISIS AI Lab</a></h1>
+            <ul class="nav">
+                <li><a class="nav-btn1 active" href="#about">Добавление класса</a></li>
+                <li><a class="nav-btn2" href="#skills">Дообучение модели</a></li>
+                <li><a class="nav-btn3" href="#portfolio">История версий</a></li>
+                <li><a class="nav-btn4" href="#services">Тест модели</a></li>
+                <li><a class="nav-btn5" href="#contact">Contact</a></li>
+            </ul>
+            <i class="ham-btn fas fa-bars"></i>
+        </nav>
+        <div class="row sec-dis">
+        <div class="">
+          <!-- <div class="skill-container-first"> -->
+
+            <div class="skill">
+              <p>Это раздел добавления изображений. Здесь вы можете добавить изображения, как со своего компьютера,
+                так и при помощи парсера (или и того и того вместе)
+              </p>
+            </div>
+
+          
+            <div class="skill" style="background: gray;">
+                <!-- <p>Введите название класса на английском</p> -->
+                <div class="class-name-control" style="width: 70%;">
+                  <h6 for="class-name" style="color: white;">Введите название класса на английском</h6>
+                  <input class="form-control" style="border: 1px solid white;margin-top: 10px;margin-bottom: 10px; color:black;" id="class-name" type="text" />
+                </div>
+                <div class="wrapper" style="margin-bottom:30px;">
+                  <form enctype="multipart/form-data" class="form1" action="#" style="width:50%;">
+                    <input class="file-input" type="file" multiple="multiple" name="file" accept="image/png, image/jpeg" hidden>
+                    <div class="img-icon"><i class="far fa-image"></i></div>
+                    <p>Выберите несколько изображений</p>
+                  </form>
+                  <p class="count-images"></p>
+                </div>
+                <div>
+                  <input type="checkbox" id="is-use-parser" name="parser">
+                  <label for="parser" style="color: white;">Подгрузить изображения из парсера</label>
+                </div>
+                <div id="parsed-images"></div>
+                <div id="parsed-wait" style="display: none;"><h1>Идет загрузка</h1></div>
+                <div class="image-number">
+                  <p for="image-number">Введите количество картинок</p>
+                  <input class="number-control" id="parser-count"  style="border: 1px solid white;color:black;" id="image-number" type="number" />
+                </div>
+                <button class="btn" id="show-parse-example">Показать пример парсинга</button>
+                <div class="progress-bar-block" style="visibility: hidden">
+                  <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0"
+                      aria-valuemax="100">25%</div>
+                  </div>
+                </div>
+                <button class="btn add-class" id="btn-add-class" disabled="true">Добавить</button>
+            <!-- </div> -->
+          </div>
+        </div>
+<!--         
+            <div>
+                <div class="class-name-control">
+                  <h6 for="class-name">Введите название класса на английском</h6>
+                  <input class="form-control" id="class-name" type="text" />
+                </div>
+                <div class="wrapper">
+                  <form enctype="multipart/form-data" action="#">
+                    <input class="file-input" type="file" multiple="multiple" name="file" hidden>
+                    <div class="img-icon"><i class="far fa-image"></i></div>
+                    <p>Выберите несколько изображений</p>
+                  </form>
+                </div>
+                <div>
+                  <input type="checkbox" id="parser" name="parser">
+                  <label for="parser">Подгрузить изображения из парсера</label>
+                </div>
+                <div class="image-number">
+                  <p for="image-number">Введите количество картинок</p>
+                  <input class="number-control" id="image-number" type="text" />
+                </div>
+                <div class="progress-bar-block" style="visibility: hidden">
+                  <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0"
+                      aria-valuemax="100">25%</div>
+                  </div>
+                </div>
+                <button
+                  class="flex mx-auto mt-16 text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-600 rounded text-lg add-class-btn">Добавить</button>
+            </div> -->
+
+
+        </div>
+        <div class="header-img">
+            <img src="user.png" alt="">
+        </div>
+        </div>
+        <div class="effects">
+            <span></span>
+            <span></span>
+        </div>
+        <section class="section skills ">
+          
+        </section>
+        <section class="section portfolios ">
+          <form enctype="multipart/form-data" class="form2" action="#" style="width:50%;">
+            <input class="file-input-2" type="file" multiple="multiple" name="file" accept="image/png, image/jpeg" hidden>
+            <div class="img-icon"><i class="far fa-image"></i></div>
+            <p>Выберите несколько изображений</p>
+          </form>
+          <button id="predict-btn">Предсказать</button>
+        </section>
+        <section class="section contact ">
+            <!-- <h1 class="section-title">Contact</h1>
+            <p class="section-desc">Have a question or want to work together? Contact me now or send a email <a href="mailto:waseemaofficial@gmail.com">here</a>.</p>
+            <div class="contact-container">
+
+                <form class="contact-form">
+                    <input type="text" placeholder="Full Name">
+                    <input type="email" placeholder="Email Address">
+                    <input type="text" placeholder="Subject">
+                    <textarea name="message" placeholder="Message Here..."></textarea>
+                    <button class="btn">Send</button>
+                </form>
+
+                </div> -->
+                <div class="app">
       
-      <div class="body-version-history">
-    <ul class="tree">
-      <li class="parent" id="0"> <span>Первая версия модели</span>
-      </li>
-    </ul>
-      </div>
-  </div>
-
-      <div class="body-model-test">
-    <div class="test-prediction">
-    <div class="wrapper">
-      <form class="form2" enctype="multipart/form-data" action="#">
-        <input class="file-input-2" type="file" multiple="multiple" name="file2" hidden>
-        <div class="img-icon"><i class="far fa-image"></i></div>
-        <p>Выберите несколько изображений</p>
-      </form>
-    </div>
-    <button
-    class="flex mx-auto mt-16 text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none rounded text-lg btn-test">
-    Протестировать
-  </button>
-</div>
-    <div class="prediction">
-      <button
-        class="flex mx-auto mt-16 text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none rounded text-lg btn-again">
-        Протестировать заново
-      </button>
-      <div class="app">
-        <div class="cardList">
-          <button class="cardList__btn btn btn--left">
-            <div class="icon">
-              <svg>
-                <use xlink:href="#arrow-left"></use>
-              </svg>
-            </div>
-          </button>
-          <div class="cards__wrapper">
-            <div class="card current--card">
-              <div class="card__image">
-                <img src="https://source.unsplash.com/Z8dtTatMVMw" alt="" />
-              </div>
-            </div>
-            <div class="card next--card">
-              <div class="card__image">
-                <img src="https://source.unsplash.com/9dmycbFE7mQ" alt="" />
-              </div>
-            </div>
-            <div class="card previous--card">
-              <div class="card__image">
-                <img src="https://source.unsplash.com/m7K4KzL5aQ8" alt="" />
-              </div>
-            </div>
-          </div>
-          <button class="cardList__btn btn btn--right">
-            <div class="icon">
-              <svg>
-                <use xlink:href="#arrow-right"></use>
-              </svg>
-            </div>
-          </button>
-        </div>
-        <div class="infoList">
-          <div class="info__wrapper">
-            <div class="info current--info">
-              <h1 class="text name">Highlands</h1>
-              <h4 class="text location">Scotland</h4>
-              <p class="text description">The mountains are calling</p>
-            </div>
-            <div class="info next--info">
-              <h1 class="text name">Machu Pichu</h1>
-              <h4 class="text location">Peru</h4>
-              <p class="text description">Adventure is never far away</p>
-            </div>
-            <div class="info previous--info">
-              <h1 class="text name">Chamonix</h1>
-              <h4 class="text location">France</h4>
-              <p class="text description">Let your dreams come true</p>
-            </div>
-          </div>
-        </div>
-        <div class="app__bg">
-          <div class="app__bg__image current--image">
-            <img src="https://source.unsplash.com/Z8dtTatMVMw" alt="" />
-          </div>
-          <div class="app__bg__image next--image">
-            <img src="https://source.unsplash.com/9dmycbFE7mQ" alt="" />
-          </div>
-          <div class="app__bg__image previous--image">
-            <img src="https://source.unsplash.com/m7K4KzL5aQ8" alt="" />
-          </div>
-        </div>
-        <svg class="icons" style="display: none;">
-          <symbol id="arrow-left" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
-            <polyline points='328 112 184 256 328 400'
-              style='fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:48px' />
-          </symbol>
-          <symbol id="arrow-right" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
-            <polyline points='184 112 328 256 184 400'
-              style='fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:48px' />
-          </symbol>
-        </svg>
-      </div>
-    </div>
-    <!-- <div class="loading__wrapper">
-    <div class="loader--text">Loading...</div>
-    <div class="loader">
-      <span></span>
-    </div>
-  </div> -->
-      </div>
-    </div>
-</body>
-
-</html>
+                    <div class="cardList">
+                      <button class="cardList__btn btn btn--left">
+                        <div class="icon">
+                          <svg>
+                            <use xlink:href="#arrow-left"></use>
+                          </svg>
+                        </div>
+                      </button>
+                      <div class="cards__wrapper">
+                        <div class="card current--card">
+                          <div class="card__image">
+                            <img src="https://source.unsplash.com/Z8dtTatMVMw" alt="" />
+                          </div>
+                        </div>
+                
+                        <div class="card next--card">
+                          <div class="card__image">
+                            <img src="https://source.unsplash.com/9dmycbFE7mQ" alt="" />
+                          </div>
+                        </div>
+                
+                        <div class="card previous--card">
+                          <div class="card__image">
+                            <img src="https://source.unsplash.com/m7K4KzL5aQ8" alt="" />
+                          </div>
+                        </div>
+                      </div>
+                
+                      <button class="cardList__btn btn btn--right">
+                        <div class="icon">
+                          <svg>
+                            <use xlink:href="#arrow-right"></use>
+                          </svg>
+                        </div>
+                      </button>
+                    </div>
+                
+                    <div class="infoList">
+                      <div class="info__wrapper">
+                        <div class="info current--info">
+                          <h1 class="text name">Highlands</h1>
+                          <h4 class="text location">Scotland</h4>
+                          <p class="text description">The mountains are calling</p>
+                        </div>
+                
+                        <div class="info next--info">
+                          <h1 class="text name">Machu Pichu</h1>
+                          <h4 class="text location">Peru</h4>
+                          <p class="text description">Adventure is never far away</p>
+                        </div>
+                
+                        <div class="info previous--info">
+                          <h1 class="text name">Chamonix</h1>
+                          <h4 class="text location">France</h4>
+                          <p class="text description">Let your dreams come true</p>
+                        </div>
+                      </div>
+                    </div>
+                
+                
+                    <div class="app__bg">
+                      <div class="app__bg__image current--image">
+                        <img src="https://source.unsplash.com/Z8dtTatMVMw" alt="" />
+                      </div>
+                      <div class="app__bg__image next--image">
+                        <img src="https://source.unsplash.com/9dmycbFE7mQ" alt="" />
+                      </div>
+                      <div class="app__bg__image previous--image">
+                        <img src="https://source.unsplash.com/m7K4KzL5aQ8" alt="" />
+                      </div>
+                    </div>
+                    <svg class="icons" style="display: none;">
+                    <symbol id="arrow-left" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
+                      <polyline points='328 112 184 256 328 400'
+                        style='fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:48px' />
+                    </symbol>
+                    <symbol id="arrow-right" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
+                      <polyline points='184 112 328 256 184 400'
+                        style='fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:48px' />
+                    </symbol>
+                  </svg>
+                  </div>
+                
+                  <!-- <div class="loading__wrapper">
+                    <div class="loader--text">Loading...</div>
+                    <div class="loader">
+                      <span></span>
+                    </div>
+                  </div> -->               
+                </div>
+        </section>
+    </header>
+    

@@ -83,9 +83,11 @@ namespace AvanPost.API.Controllers
                 await _context.SaveChangesAsync();
 
 
+                var predicts = new List<PredictResponse>();
+
                 while (keys.Any())
                 {
-                    var predicts = new List<PredictResponse>();
+                   
 
 
                     var result = _context.Predicts.Where(x => keys.Select(x => x.Item1).Contains(x.Key));
@@ -102,7 +104,7 @@ namespace AvanPost.API.Controllers
                     keys = keys.Where(x => result.Select(y => y.Key).Contains(x.Item1)).ToList();
                 }
 
-                return Ok();
+                return Ok(predicts);
             }
             catch (Exception ex)
             {

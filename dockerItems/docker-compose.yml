@@ -100,7 +100,7 @@ services:
     ports:
       - 9000:8005
     volumes:
-      - ../databases/datasets:/datasets
+      - ../databases/images:/datasets
       - ../Parser:/app
     entrypoint:
       ./server.py

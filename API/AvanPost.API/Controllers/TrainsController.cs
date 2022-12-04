@@ -31,7 +31,7 @@ namespace AvanPost.API.Controllers
         }
 
         [HttpPost("Train")]
-        public async Task Train(TrainRequest request)
+        public async Task<ActionResult> Train(TrainRequest request)
         {
 
             foreach(var @class in request.Classes)
@@ -48,10 +48,11 @@ namespace AvanPost.API.Controllers
             }
             var key = Guid.NewGuid().ToString();
 
-            await _context.Trains.AddAsync(new Avanpost.Data.Entities.Train()
+            var train = new Avanpost.Data.Entities.Train()
             {
                 Key = key,
-            });
+            };
+            await _context.Trains.AddAsync(train);
 
             await _context.SaveChangesAsync();
 
@@ -60,6 +61,14 @@ namespace AvanPost.API.Controllers
                 Key = key,
                 DatasetPath = DATASET_PATH
             });
+
+            while (train.Status != 2 || train.Status!= 3)
+            {
+                await Task.Delay(1000);
+                train = await _context.Trains.FindAsync(train.Id);
+            }
+
+            return Ok(train);
         }
     }
 }
