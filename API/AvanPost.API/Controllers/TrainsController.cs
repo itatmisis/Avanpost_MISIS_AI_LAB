@@ -36,10 +36,19 @@ namespace AvanPost.API.Controllers
 
             foreach(var @class in request.Classes)
             {
+
+                if (Directory.Exists(_appSettings.ToTrainImages))
+                {
+                    Directory.Delete(_appSettings.ToTrainImages);
+                    Directory.CreateDirectory(_appSettings.ToTrainImages);
+                }
                 var _dbClass = await _context.DataClasses.FindAsync(@class);
 
                 if(_dbClass != null)
                 {
+                    if(!Directory.Exists(Path.Combine(_appSettings.ToTrainImages, _dbClass.Name))){
+                        Directory.CreateDirectory(Path.Combine(_appSettings.ToTrainImages, _dbClass.Name));
+                    }
                     foreach (string newPath in Directory.GetFiles(Path.Combine(_appSettings.ImagesFolder, _dbClass.Name)))
                     {
                         System.IO.File.Copy(newPath, newPath.Replace(_appSettings.ImagesFolder, _appSettings.ToTrainImages), true);
