@@ -36,7 +36,7 @@ namespace AvanPost.API.Controllers
 
                 if(response?.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    return Ok(Directory.GetFiles($"//parserImages//{request.ClassName}").Select(x => x));
+                    return Ok(Directory.GetFiles($"//app//parserImages//{request.ClassName}").Select(x => x));
                 }
 
 
