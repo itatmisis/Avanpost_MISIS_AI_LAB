@@ -18,11 +18,11 @@ async def read_root():
 
 
 @app.get("/get_images")
-async def get_images(object, folder_name, galery_name):
+async def get_images(object, folder_name, galery_name, amount):
     save_dir = "/datasets/" + galery_name + "/" + folder_name
     try:
         logger.info("Processing request for \"{}\", saving to \"{}\"".format(object, save_dir))
-        save_images(get_links(get_page_selenium(object)), save_dir)
+        save_images(get_links(get_page_selenium(object)), save_dir, amount)
     except Exception as e:
         logger.error(e)
         return {'status': 'failed'}
