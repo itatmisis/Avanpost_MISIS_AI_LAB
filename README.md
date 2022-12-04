@@ -32,7 +32,7 @@
 
 ### Локальный запуск
 
-Перед тем, как развернуть у себя сервис необходим [Docker](https://docs.docker.com/get-docker/) и [Docker Commpose](https://docs.docker.com/compose/install).
+Перед тем, как развернуть у себя сервис необходим [Docker](https://docs.docker.com/get-docker/) и [Docker Compose](https://docs.docker.com/compose/install).
 
 Если требование выполнено, то выполните 3 простых действия:
 
@@ -60,7 +60,7 @@
 
 ### Референсная Архитектура
 
-В качестве референсных архитектур мы взяли подход IBM в построении решений [AI for IT Operations (AIOps)](https://www.ibm.com/cloud/architecture/architectures/sm-aiops/reference-architecture), из которого мы поняли, что шаги 1-7 и разбиение процесса на этапы (Collect, Organize, Analyze, Infuse) соответствуют нашим потребноостям.
+В качестве референсных архитектур мы взяли подход IBM в построении решений [AI for IT Operations (AIOps)](https://www.ibm.com/cloud/architecture/architectures/sm-aiops/reference-architecture), из которого мы поняли, что разбиение процесса на этапы (Collect, Organize, Analyze, Infuse) соответствуют нашим потребноостям.
 
 ### Паттерны
 
