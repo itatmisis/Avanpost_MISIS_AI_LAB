@@ -58,27 +58,31 @@ class PredictModelDB:
     
     def validate_key(self, key):
         try:
-            return predict.get(predict.key == key)
+            predict.get(predict.key == key)
         except Exception:
             self._logger.error("Error while validating key in DB: {}".format(key))
             return False
+        return True
 
     def update_status(self, key, status):
-        self.validate_key(key)
+        if not self.validate_key(key):
+            return
         try:
             predict.update(status=status).where(predict.key == key).execute()
         except Exception as e:
             self._logger.error("Error while updating status in DB: {}".format(e))
 
     def update_class_name(self, key, class_name):
-        self.validate_key(key)
+        if not self.validate_key(key):
+            return
         try:
             predict.update(class_name=class_name).where(predict.key == key).execute()
         except Exception as e:
             self._logger.error("Error while updating class_name in DB: {}".format(e))
     
     def update_progress(self, key, percent):
-        self.validate_key(key)
+        if not self.validate_key(key):
+            return
         try:
             predict.update(percent=percent).where(predict.key == key).execute()
         except Exception as e:
@@ -105,27 +109,31 @@ class TrainModeDB:
     
     def validate_key(self, key):
         try:
-            return train.get(predict.key == key)
-        except Exception:
-            self._logger.error("Error while validating key in DB: {}".format(key))
+            train.get(train.key == key)
+        except Exception as e:
+            self._logger.error("Error while validating key \"{}\" in DB: {}".format(key, e))
             return False
+        return True
 
     def update_status(self, key, status):
-        self.validate_key(key)
+        if not self.validate_key(key):
+            return
         try:
             train.update(status=status).where(train.key == key).execute()
         except Exception as e:
             self._logger.error("Error while updating status in DB: {}".format(e))
 
     def update_progress(self, key, percent):
-        self.validate_key(key)
+        if not self.validate_key(key):
+            return
         try:
             train.update(percent=percent).where(train.key == key).execute()
         except Exception as e:
             self._logger.error("Error while updating progress in DB: {}".format(e))
     
     def update_dataset_name(self, key, dataset):
-        self.validate_key(key)
+        if not self.validate_key(key):
+            return
         try:
             train.update(dataset=dataset).where(train.key == key).execute()
         except Exception as e:
@@ -153,3 +161,34 @@ class PredictModelDBMock:
 
 # Очередь train: {"key":"default", "dataset_path":"default"}
 # Очередь predict: {"key":"abc", "image_filename":"default.jpg"}
+
+if __name__ == "__main__":
+    from time import sleep
+    logging.basicConfig(level=logging.INFO)
+    logging.getLogger("PostgresDB").setLevel(logging.DEBUG)
+    train_db = TrainModeDB()
+    predict_db = PredictModelDB()
+    train.delete().where(train.key == "test").execute()
+    predict.delete().where(predict.key == "test").execute()
+    train.delete().where(train.key == "test_db_train").execute()
+    predict.delete().where(predict.key == "test_db_predict").execute()
+    predict.insert(key="test_db_predict", status=0, percent=0, class_name="").execute()
+    train.insert(key="test_db_train", status=0, percent=0, dataset="").execute()
+    train_db.pending("test_db_train")
+    sleep(1)
+    train_db.in_progress("test_db_train")
+    sleep(1)
+    train_db.done("test_db_train")
+    sleep(1)
+    train_db.error("test_db_train")
+    sleep(1)
+    predict_db.pending("test_db_predict")
+    sleep(1)
+    predict_db.in_progress("test_db_predict")
+    sleep(1)
+    predict_db.done("test_db_predict")
+    sleep(1)
+    predict_db.error("test_db_predict")
+    sleep(1)
+    train.delete().where(train.key == "test_db_train").execute()
+    predict.delete().where(predict.key == "test_db_predict").execute()
