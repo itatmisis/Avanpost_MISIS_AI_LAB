@@ -50,6 +50,7 @@ def save_images(links, folder_name, amount=100):
         linked = "https:" + str(link)
 
         p = requests.get(linked)
+
         with open(f"{folder_name}/{count}.jpg", "wb") as file:
             file.write(p.content)
             file.close()
