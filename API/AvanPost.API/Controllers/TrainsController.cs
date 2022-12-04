@@ -34,6 +34,12 @@ namespace AvanPost.API.Controllers
         public async Task<ActionResult> Train(TrainRequest request)
         {
 
+
+             if (Directory.Exists(_appSettings.ToTrainImages))
+                {
+                    Directory.Delete(_appSettings.ToTrainImages);
+                    Directory.CreateDirectory(_appSettings.ToTrainImages);
+                }
             foreach(var @class in request.Classes)
             {
                 var _dbClass = await _context.DataClasses.FindAsync(@class);
