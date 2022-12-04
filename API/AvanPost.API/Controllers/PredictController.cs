@@ -97,8 +97,8 @@ namespace AvanPost.API.Controllers
                      {
                          Percent = x.Percent,
                          ClassName = x.ClassName,
-                         FilaName = keys.FirstOrDefault(k => k.Item1 == x.Key).Item2
-                     }));
+                         FilaName = keys == null ? null: keys.FirstOrDefault(k => k.Item1 == x.Key).Item2
+                     })) ;
 
 
                     keys = keys.Where(x => result.Select(y => y.Key).Contains(x.Item1)).ToList();
@@ -108,6 +108,7 @@ namespace AvanPost.API.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine();
                 return BadRequest();
             }
         }
