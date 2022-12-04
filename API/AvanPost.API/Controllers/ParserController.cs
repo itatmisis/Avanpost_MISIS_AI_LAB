@@ -22,6 +22,7 @@ namespace AvanPost.API.Controllers
             _parserApi = new ParserApiCaller();
         }
 
+        [HttpPost("Parse")]
         public async Task<ActionResult> Parse(ParseRequest request)
         {
             try
