@@ -10,5 +10,5 @@ class Predictor:
     def predict(self, model_name, dataset_path, img_root):
         return inference.predict(model_name, dataset_path, img_root)
 
-    def train(self, model_name, img_root):
-        return main.train_model(model_name, img_root)
+    def train(self, model_name, img_root, notyfier=None):
+        return main.train_model(model_name, img_root, notyfier)

@@ -28,6 +28,6 @@ RUN pip3 install torch==1.13.0
 RUN pip3 install torchvision 
 RUN pip3 install numpy matplotlib Pillow tqdm
 RUN pip3 install tensorflow
-
+RUN pip3 install psycopg2-binary peewee
 ENV PYTHONPATH "${PYTHONPATH}:/ml/"
 WORKDIR /app

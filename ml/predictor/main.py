@@ -1,3 +1,4 @@
+import os
 import warnings
 import torchvision
 import zipfile
@@ -88,23 +89,49 @@ class ResNet(nn.Module):
         out = self.backbone(image)
         return out
 
-def train(model, epoches, train_data, device, val_data = None):
-    for i in tqdm(range(epoches)):
+class TqdmUpTo(tqdm):
+
+    def __init__(self, *args, **kwargs):
+        self._notyfier = kwargs.pop('notyfier', None)
+        super(TqdmUpTo, self).__init__(*args, **kwargs)
+
+    @property
+    def n(self):
+        return self.__n
+
+    @n.setter
+    def n(self, value):
+        if self._notyfier is None:
+            self.__n = value
+            return
+        if self.total > 0:
+            percentage = value / self.total * 100
+        else:
+            percentage = 0
+        self._notyfier(percentage)
+        self.__n = value
+
+def train(model, epoches, train_data, device, val_data = None, notyfier=None):
+    for i in TqdmUpTo(range(epoches), desc='Epoch', notyfier=notyfier):
         train_loss, train_accuracy = train_epoch(model, train_data, device)
         print(f'\n Epoch #{i + 1}\nTrain loss = {train_loss}, Train accuracy = {train_accuracy}')
         if val_data is not None:
             test_loss, test_accuracy = evaluation_epoch(model, val_data, device)
             print(f'Test loss = {test_loss}, Test accuracy = {test_accuracy}')
-    torch.save(model, 'new_model.pt')
+    # torch.save(model, 'new_model.pt')
 
-def train_model(model_path:str, dataset_path:str):
+def train_model(model_path:str, dataset_path:str, notyfier=None):
+    dirs = os.listdir(dataset_path)
+    dirs = list(filter(lambda x: x[0] != '.', dirs))
+    num_classes = len(dirs)
+    print(f"Number of classes: {num_classes}")
     train_set = torchvision.datasets.ImageFolder(dataset_path, transform=preprocess)
     train_dataset = DataLoader(train_set, batch_size=16, num_workers=1, shuffle=True)
     # подгружаем нашу предобученную модель
     model_backbone = pretrained_model
     # создаем новую модель с нашим количеством классов
-    model = ResNet(model_backbone, 10) 
-    train(model=model, epoches=5, train_data=train_dataset, device=device)
+    model = ResNet(model_backbone, num_classes) 
+    train(model=model, epoches=2, train_data=train_dataset, device=device, notyfier=notyfier)
     model_path += ".pth"
     torch.save(model, model_path)
 
