@@ -32,6 +32,7 @@ namespace AvanPost.API.Controllers
                     ClassName = request.ClassName,
                     FolderName = "/parserImages"
                 });
+                Console.WriteLine(response);
 
                 if(response?.StatusCode == System.Net.HttpStatusCode.OK)
                 {
@@ -43,6 +44,7 @@ namespace AvanPost.API.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest();
             }
         }
