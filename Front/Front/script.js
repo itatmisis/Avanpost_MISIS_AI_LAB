@@ -17,6 +17,8 @@ $(function () {
                 
             };
 
+        $(".lds-ring").css('display', 'none')
+
         form.addEventListener("click", () => {
             fileInput.click();
         });
@@ -59,7 +61,7 @@ $(function () {
                 //uploadedArea.classList.add("onprogress");
                 if (loaded == total) {
                     //location.reload()
-                    setTToTrainTable()
+                    // setTToTrainTable()
                 }
             }
 
@@ -102,7 +104,7 @@ $(function () {
             // const preloader = document.querySelector(".pre-loader");
             // preloader.style.display = 'inherit';
             $.ajax({
-              url: `${BACKEND_API}Parser/Parse`,
+              url: `${BACKEND_API}/Parser/Parse`,
               headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -118,7 +120,7 @@ $(function () {
                   count = data.length;
                 }
         
-                var block = $("#parsed-images");
+                var block = document.querySelector("#parsed-images");
         
                 for (let i = 0; i < count; i++) {
                   block.append(`<a>${IMAGES_URL}/${name}/${data[i]}</a> <br> `)
@@ -418,12 +420,13 @@ function getClassesToTrain() {
             // data = Object.entries(data)
            
             data.map((i) => {
-               console.log(i.images.length != 0 ? `${IMAGES_URL}${i.images[0]}` : 'berlin1.jpg')  
             classes.push({ //
-                src:   i.images.length != 0 ? `${IMAGES_URL}${i.images[0]}` : 'berlin1.jpg',     // image url
-                srct:  i.images.length != 0 ? `${IMAGES_URL}${i.images[0]}` : 'berlin1t.jpg',    // thumbnail url
-                title: i.name         // element title
-              })}
+                    src:   i.images.length != 0 ? `${IMAGES_URL}${i.images[0]}` : `${IMAGES_URL}${i.name}/0.jpg`,     // image url
+                    srct:  i.images.length != 0 ? `${IMAGES_URL}${i.images[0]}` : `${IMAGES_URL}${i.name}/0.jpg`,    // thumbnail url
+                    title: i.name         // element title
+                  })
+            classs.push(i.id)
+                }
                )
             console.log(data, classes, classs)
 
@@ -432,15 +435,6 @@ function getClassesToTrain() {
                 thumbnailSelectable :   true,   // enables selection mode
                 items: 
                 classes,
-                // [
-                //   {
-                //     src:   'berlin1.jpg',     // image url
-                //     srct:  'berlin1t.jpg',    // thumbnail url
-                //     title: "Berlin"         // element title
-                //   },
-                //   { src: 'berlin2.jpg', srct: 'berlin2t.jpg', title: 'Cars' },
-                //   { src: 'berlin3.jpg', srct: 'berlin3t.jpg', title: 'Skateboards' }
-                // ],
                 thumbnailWidth:         'auto',
                 thumbnailHeight:        '200px',
                 itemsBaseURL: 'https://nanogallery2.nanostudio.org/samples/',
@@ -456,7 +450,7 @@ function getClassesToTrain() {
               var ngy2data = $("#my_nanogallery2").nanogallery2('data');
               
               // counter 
-              $('#nb_selected').text(ngy2data.gallery.nbSelected);
+              $('#nb_selected').text(`Выбрано классов: ${ngy2data.gallery.nbSelected}`);
               
               // selected items
               var sel = '';
@@ -483,16 +477,46 @@ function showClassesData(data) {
 $(document).ready(function () {
     const form2 = document.querySelector(".form2"),
         fileInput2 = document.querySelector(".file-input-2")
-        console.log(form2, fileInput2)
+        // console.log(form2, fileInput2)
     $(document).on('click',
     '.btn-test',
     function () {
         predict()
     });
 
+    $(document).on('click',
+    '.btn-teach',
+    function () {
+        teach()
+    });
+
     form2.addEventListener("click", () => {
         fileInput2.click();
     });
+
+    function teach(){
+        console.log(classs)
+        // $(".lds-ring").css('display', 'inherit')
+        $.ajax({
+            url: `${BACKEND_API}/Trains/Train`,
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            dataType: 'json',
+            data: JSON.stringify({ Classes: classs }),
+            success: function (data) {
+              console.log(data)
+              $(".loading__wrapper").css('display', 'none')
+            },
+            error: function (error) {
+              // preloader.style.display = 'none';
+              console.log(error)
+            }
+          });
+        
+    }
 
     function predict() {
         let xhr = new XMLHttpRequest();
@@ -524,14 +548,23 @@ $(document).ready(function () {
             // ToTrainTable();
             $(".test-prediction").css("display", "none");
         $(".prediction").css("display", "inherit");
-        $(".card__image_current").value = form2[0].files[0]
+        console.log(`${IMAGES_URL}Predict/${form2[0].files[0].name}`, document.querySelector(".card__image_current"))
+        $(".card__image_current").attr('src', `${IMAGES_URL}Predict/${form2[0].files[0].name}`)
+        // console.log(xhr.response[0]?.className)
+        // $('.name').text(xhr?.response[0]?.className);
+
+        document.querySelector(".name").value = xhr?.response[0]?.className
           }
         }
     
         function checkData() {
-          console.log(xhr.response);
+          console.log(xhr?.response[0]?.className );
+          console.log(document.querySelector(".name"))
+          $('.name').text(xhr?.response[0]?.className);
+
+         // document.querySelector(".name").value = xhr?.response[0]?.className
         }
-    
+        xhr.responseType = 'json';
         xhr.onreadystatechange = checkData;
         xhr.send(data);
       }

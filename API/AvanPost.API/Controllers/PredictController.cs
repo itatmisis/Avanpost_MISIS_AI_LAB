@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
 namespace AvanPost.API.Controllers
 {
     [ApiController]
@@ -70,7 +69,11 @@ namespace AvanPost.API.Controllers
 
                         keys.Add(new Tuple<string, string>(key, file.FileName));
 
-
+                        _context.Predicts.Add(new Predict()
+                    {
+                        Key = key
+                    });
+                
                     }
                 }
                 await _context.SaveChangesAsync();
@@ -78,25 +81,28 @@ namespace AvanPost.API.Controllers
 
                 var predicts = new List<PredictResponse>();
 
-                while (keys.Any())
+                 while (true)
                 {
-                   
+
+                    var key = keys.First().Item1;
+
+                    var result = _context.Predicts.Where(x => x.Key == key && x.Percent > 50);
+
+                    if (result.Any())
+                    {
+                        Console.WriteLine("find");
+                       return Ok(result.Select(x =>
+                       new PredictResponse
+                       {
+                           //Percent = x.Percent,
+                           ClassName = x.ClassName
+                       }).ToArray());
+                    }
+                    await Task.Delay(1000);
 
 
-                    var result = _context.Predicts.Where(x => keys.Select(x => x.Item1).Contains(x.Key));
-
-                    predicts.AddRange(result.Select(x =>
-                     new PredictResponse
-                     {
-                         Percent = x.Percent,
-                         ClassName = x.ClassName,
-                         FilaName = "1"//keys.FirstOrDefault(k => k.Item1 == x.Key).Item2
-                     }));
-
-
-                    keys = keys.Where(x => result.Select(y => y.Key).Contains(x.Item1)).ToList();
+              
                 }
-
                 return Ok(predicts);
         }
     }

@@ -85,7 +85,7 @@ services:
       - avanpost
     volumes:
       - ../backend/worker:/app
-      - ../databases/images:/images
+      - ../databases/images/Predict:/images
       - ../databases/datasets:/datasets
       - ../databases/models:/models
       - ../ml:/ml

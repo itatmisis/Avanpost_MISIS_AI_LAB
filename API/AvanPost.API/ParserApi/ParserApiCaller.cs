@@ -19,7 +19,7 @@ namespace AvanPost.API.ParserApi
            try{
                 HttpRequestMessage message = new HttpRequestMessage()
                 {
-                    RequestUri = new System.Uri($"http://51.250.88.247:9000/get_images?object={request.ClassName}&folder_name={request.ClassName}&galery_name={request.ClassName}S&amount=100")
+                    RequestUri = new System.Uri($"http://51.250.88.247:9000/get_images?object={request.ClassName}&folder_name={request.ClassName}&galery_name={request.ClassName}&amount=100")
                 };
 
                  return await _client.SendAsync(message);
